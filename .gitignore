@@ -3,9 +3,11 @@ tags.meta
 *.tmp
 *.suo
 *.swp
+*.swo
 *.csproj
 *.sln
 ~*
 Library/
 Temp/
 Build/
+.vscode

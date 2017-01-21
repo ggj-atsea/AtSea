@@ -3,21 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class UI : MonoBehaviour {
+public class UI : Singleton<UI> {
 
     // Text fields
     [SerializeField] private UIText _day;
     [SerializeField] private UIText _subtitle;
-
-    // Singleton
-    private static UI _inst;
-    public static UI Instance {
-        get {
-            if (_inst == null)
-                _inst = Object.FindObjectOfType<UI>();
-            return _inst;
-        }
-    }
 
     public void SetSubtitle(string message) {
         _subtitle.SetText(message, 3.0f, 1.0f);
@@ -26,13 +16,6 @@ public class UI : MonoBehaviour {
     public void SetDay(int day) {
         _day.SetText("Day " + day, 3.0f, 1.0f);
     }
-
-	void Start() {
-        _inst = this;
-	}
-	
-	void Update() {
-	}
 
     // Helper class for handling text state
     [System.Serializable]

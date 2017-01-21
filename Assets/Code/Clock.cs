@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Clock : MonoBehaviour
+public class Clock : Singleton<Clock>
 {
     [SerializeField] private float _secondsInDay = 60.0f;
 

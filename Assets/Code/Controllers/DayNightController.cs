@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
-[RequireComponent(typeof(Clock))]
-public class DayNight : MonoBehaviour
+public class DayNightController : Singleton<DayNightController> 
 {
     [SerializeField] private float _sunriseAngle;
     [SerializeField] private float _sunriseStart;
@@ -16,22 +16,27 @@ public class DayNight : MonoBehaviour
     [SerializeField] private Color _dayColor;
     [SerializeField] private Color _nightColor;
 
-    private Clock _clock;
+    public event Action<int> OnDawn;
+    public event Action<int> OnSunrise;
+    public event Action<int> OnSunset;
+    public event Action<int> OnDusk;
+    public event Action<int> OnMidnight;
 
-	// Use this for initialization
-	void Start() {
-        _clock = GetComponent<Clock>();
-	}
-	
+    private float _lastTime = -1.0f;
+
 	// Update is called once per frame
 	void Update() {
-        var time = _clock.Hour;
+        var time = Clock.Instance.Hour;
+        var day = Clock.Instance.Day;
 
         // Set color and intensity based on sunrise/sunset
-        if (time < _sunriseStart || time > _sunsetEnd) {
+        if (time < _sunriseStart) {
             SetEnvironment(_nightColor, _nightColor, 0.0f);
             SetLightIntensity(0.0f, 0.0f, 0.0f);
             UI.Instance.SetSubtitle("Night...");
+
+            if (_lastTime > time && OnMidnight != null)
+                OnMidnight(day);
         }
         else if (time < _sunriseEnd) {
             float percent = (time - _sunriseStart) / (_sunriseEnd - _sunriseStart);
@@ -39,20 +44,40 @@ public class DayNight : MonoBehaviour
             SetLightIntensity(0.0f, 1.0f, percent);
             UI.Instance.SetSubtitle("Sunrise.");
 
-            if (time < _sunriseStart + 0.1f)
-                UI.Instance.SetDay(_clock.Day);
+            if (_lastTime < _sunriseStart && OnDawn != null) {
+                OnDawn(day);
+            }
         }
         else if (time < _sunsetStart) {
             SetEnvironment(_dayColor, _dayColor, 0.0f);
             SetLightIntensity(1.0f, 1.0f, 0.0f);
             UI.Instance.SetSubtitle("Daytime.");
+
+            if (_lastTime < _sunriseEnd && OnSunrise != null) {
+                OnSunrise(day);
+            }
         }
-        else /*if (time < _sunsetEnd)*/ {
+        else if (time < _sunsetEnd) {
             float percent = (time - _sunsetStart) / (_sunsetEnd - _sunsetStart);
             SetEnvironment(_dayColor, _nightColor, percent);
             SetLightIntensity(1.0f, 0.0f, percent);
             UI.Instance.SetSubtitle("Sunset.");
+
+            if (_lastTime < _sunsetStart && OnSunset != null) {
+                OnSunset(day);
+            }
         }
+        else { // time >= _sunsetEnd)
+            SetEnvironment(_nightColor, _nightColor, 0.0f);
+            SetLightIntensity(0.0f, 0.0f, 0.0f);
+            UI.Instance.SetSubtitle("Night...");
+
+            if (_lastTime < _sunsetEnd && OnDusk != null) {
+                OnDusk(day);
+            }
+        }
+
+        _lastTime = time;
 
         // Set position from sunriseStart to sunsetEnd
         float sunPos = (time - _sunriseStart) / (_sunsetEnd - _sunriseStart);
