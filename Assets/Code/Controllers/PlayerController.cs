@@ -15,23 +15,44 @@ public class PlayerController : MonoBehaviour
     public float ThirstPercent() { return Thirst / ThirstMax; }
     public float FatiguePercent() { return Fatigue / FatigueMax; }
 
+    private bool _gameOver = false;
+
 	// Use this for initialization
 	void Start() {
         Hunger = 0.0f;
         Thirst = 0.0f;
 
         DayNightController.Instance.OnMidnight += OnMidnight;
+        DayNightController.Instance.OnDawn += OnDawn;
 	}
 
     void OnDestroy() {
         if (DayNightController.HasInstance)
             DayNightController.Instance.OnMidnight -= OnMidnight;
+            DayNightController.Instance.OnDawn -= OnDawn;
     }
 
     void OnMidnight(int day) {
+        if (Hunger >= HungerMax || Thirst >= ThirstMax)
+            _gameOver = true;
+
         Hunger += 1.0f;
         Thirst += 1.0f;
 
-        HUD.Instance.UpdateStats(this);
+        // Go to sleep
+        UI.Instance.FadeOut();
+    }
+
+    void OnDawn(int day) {
+        if (_gameOver) {
+            UI.Instance.GameOver();
+        }
+        else {
+            // Wake up
+            UI.Instance.FadeIn();
+            UI.Instance.SetDay(day);
+
+            HUD.Instance.UpdateStats(this);
+        }
     }
 }
