@@ -1,0 +1,11 @@
+tags
+tags.meta
+*.tmp
+*.suo
+*.swp
+*.csproj
+*.sln
+~*
+Library/
+Temp/
+Build/
