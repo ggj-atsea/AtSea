@@ -8,6 +8,9 @@ public class UI : Singleton<UI> {
     // Text fields
     [SerializeField] private UIText _day;
     [SerializeField] private UIText _subtitle;
+    [SerializeField] private UIText _gameOver;
+
+    [SerializeField] private GameObject _blackout;
 
     public void SetSubtitle(string message) {
         _subtitle.SetText(message, 3.0f, 1.0f);
@@ -15,6 +18,12 @@ public class UI : Singleton<UI> {
 
     public void SetDay(int day) {
         _day.SetText("Day " + day, 3.0f, 1.0f);
+    }
+
+    public void GameOver() {
+        _blackout.SetActive(true);
+        _gameOver._text.enabled = true;
+        //_gameOver.SetText();
     }
 
     // Helper class for handling text state
@@ -49,5 +58,16 @@ public class UI : Singleton<UI> {
         }
     }
 
+    public void FadeOut() {
+        _gameOver._text.enabled = false;
+        _blackout.SetActive(true);
+		LeanTween.alpha(_blackout.GetComponent<RectTransform>(), 1.0f, 0.6f);
+    }
+
+    public void FadeIn() {
+		LeanTween.alpha(_blackout.GetComponent<RectTransform>(), 0.0f, 0.6f).setOnComplete(
+            () => { _blackout.SetActive(false); }
+        );
+    }
 }
 
