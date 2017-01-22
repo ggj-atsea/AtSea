@@ -71,11 +71,9 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		{
 			case ContainerSupply.Food:
 				Inventory.AddItem(new InventoryItem("Food"));
-				_player.EatFood();
 				break;
 			case ContainerSupply.Water:
 				Inventory.AddItem(new InventoryItem("Water"));
-				_player.DrinkWater();
 				break;
 			case ContainerSupply.Item:
 				break;

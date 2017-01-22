@@ -42,6 +42,12 @@ public class Inventory : MonoBehaviour
 	{
 		if(Items[item] <= 1)
 		{
+			switch(item.Name)
+			{
+				case "Food" : PlayerController.Instance.EatFood(); break;
+				case "Water" : PlayerController.Instance.DrinkWater(); break;
+				default : Debug.Log("What to do with this...."); break;
+			}
 			Items.Remove(item);
 			Debug.Log("Consumed the last " + item.Name);
 			return;
