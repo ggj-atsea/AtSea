@@ -7,11 +7,14 @@ public class WaveController : MonoBehaviour
 	private Cloth _cloth;
 	private float TurbulenceMin = 0f;
 	private float TurbulenceMax = 20f;
+	[SerializeField] private float CapsizeSpeed = 10f;
+	private Transform _boat;
 
 	// Use this for initialization
 	void Start ()
 	{
 		_cloth = GetComponent<Cloth>();
+		_boat = transform.GetChild(0);
 		GenerateWaves();
 
 		DayNightController.Instance.OnMidnight += OnMidnight;
@@ -19,6 +22,29 @@ public class WaveController : MonoBehaviour
 		DayNightController.Instance.OnDusk += OnDusk;
 		DayNightController.Instance.OnSunrise += OnSunrise;
 		DayNightController.Instance.OnSunrise += OnSunset;
+	}
+
+	void Update()
+	{
+		AccelerationCheck();
+	}
+
+	public void AccelerationCheck()
+	{
+		var largestAcceleration = Mathf.Max(
+			_cloth.externalAcceleration.x + _cloth.externalAcceleration.y + _cloth.externalAcceleration.z,
+			_cloth.randomAcceleration.x + _cloth.randomAcceleration.y + _cloth.randomAcceleration.z
+		);
+
+		if(largestAcceleration > 50)
+		{
+			Capsize();
+		}
+	}
+
+	public void Capsize()
+	{
+		_boat.rotation = Quaternion.Lerp(_boat.rotation, Quaternion.Euler(_boat.rotation.x, _boat.rotation.y, 180f), Time.deltaTime);
 	}
 
 	public void OnMidnight(int day)

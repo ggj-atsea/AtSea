@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class BoatController : MonoBehaviour 
+public class BoatController : MonoBehaviour, IInteractable
 {
 	private GameObject seaPlane;
 	private Cloth planeMesh;
@@ -38,5 +39,28 @@ public class BoatController : MonoBehaviour
 		}
 
 		transform.localPosition = new Vector3(transform.localPosition.x, planeMesh.vertices[closestVertexIndex].y / seaPlane.transform.localScale.z, transform.localPosition.z);
+	}
+
+    public void OnTouchDown()
+    {
+		FlipBoat();
+    }
+
+    public void OnTouchUp()
+    {
+    }
+
+    public void OnTouchStay()
+    {
+    }
+
+    public void OnTouchExit()
+    {
+    }
+
+	public void FlipBoat()
+	{
+		if(transform.rotation.z == 0) return;
+		transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0f), Time.deltaTime);
 	}
 }
