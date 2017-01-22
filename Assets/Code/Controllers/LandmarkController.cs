@@ -37,6 +37,13 @@ public class LandmarkController : Singleton<LandmarkController> {
         }
     }
 
+    public void MovePlayer(Vector3 motion) {
+        var offset = new Vector2(motion.x, motion.z);
+        _shippingLane -= offset;
+        _island -= offset;
+        _raft += offset;
+    }
+
     private void OnDawn(int day) {
         Vector2 movement = Random.insideUnitCircle.normalized;
         _raft = _raft + movement;

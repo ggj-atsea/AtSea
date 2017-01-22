@@ -27,20 +27,20 @@ public class InventoryItem : IInteractable
 		Debug.Log("Item has been destroyed");
 	}
 
-    public void OnTouchDown()
+    public void OnTouchDown(Vector2 point)
     {
         ReduceDurability();
     }
 
-    public void OnTouchExit()
+    public void OnTouchExit(Vector2 point)
     {
     }
 
-    public void OnTouchStay()
+    public void OnTouchStay(Vector2 point)
     {
     }
 
-    public void OnTouchUp()
+    public void OnTouchUp(Vector2 point)
     {
     }
 }

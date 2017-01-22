@@ -20,7 +20,9 @@ public class CameraController : MonoBehaviour {
 
 	void Update()
 	{
-		_camera.transform.LookAt(_player);
-		_camera.transform.position = new Vector3(_player.position.x, _player.position.y + 15, _player.position.z - 9);
+		//_camera.transform.LookAt(_player);
+		//_camera.transform.position = new Vector3(_player.position.x, _player.position.y + 15, _player.position.z - 9);
+
+		_camera.transform.position = new Vector3(0.0f, _player.position.y + 15, 0.0f - 9);
 	}
 }

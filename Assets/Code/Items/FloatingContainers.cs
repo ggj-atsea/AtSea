@@ -65,7 +65,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		gameObject.SetActive(false);
 	}
 
-    public void OnTouchDown()
+    public void OnTouchDown(Vector2 point)
     {
 		switch(_containerContents)
 		{
@@ -83,15 +83,15 @@ public class FloatingContainers : MonoBehaviour, IInteractable
         gameObject.SetActive(false);
     }
 
-    public void OnTouchExit()
+    public void OnTouchExit(Vector2 point)
     {
     }
 
-    public void OnTouchStay()
+    public void OnTouchStay(Vector2 point)
     {
     }
 
-    public void OnTouchUp()
+    public void OnTouchUp(Vector2 point)
     {
     }
 }

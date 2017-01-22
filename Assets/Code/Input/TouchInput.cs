@@ -19,6 +19,8 @@ public class TouchInput : MonoBehaviour {
             
             Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
+            Vector2 touchPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
 #pragma warning disable 472
             if (Physics.Raycast(ray, out hit))
 #pragma warning restore 472
@@ -28,15 +30,15 @@ public class TouchInput : MonoBehaviour {
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    recipient.SendMessage("OnTouchDown", hit.point, SendMessageOptions.DontRequireReceiver);
+                    recipient.SendMessage("OnTouchDown", touchPos, SendMessageOptions.DontRequireReceiver);
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
-                    recipient.SendMessage("OnTouchUp", hit.point, SendMessageOptions.DontRequireReceiver);
+                    recipient.SendMessage("OnTouchUp", touchPos, SendMessageOptions.DontRequireReceiver);
                 }
                 if (Input.GetMouseButton(0))
                 {
-                    recipient.SendMessage("OnTouchStay", hit.point, SendMessageOptions.DontRequireReceiver);
+                    recipient.SendMessage("OnTouchStay", touchPos, SendMessageOptions.DontRequireReceiver);
                 }
             }
             // No longer being held down
@@ -46,7 +48,7 @@ public class TouchInput : MonoBehaviour {
                 {
                     if (g.activeInHierarchy)
                     {
-                        g.SendMessage("OnTouchExit");
+                        g.SendMessage("OnTouchExit", touchPos, SendMessageOptions.DontRequireReceiver);
                     }
                 }
             }
@@ -61,6 +63,8 @@ public class TouchInput : MonoBehaviour {
 
             foreach (Touch touch in Input.touches)
             {
+                Vector2 touchPos = new Vector2(touch.position.x, touch.position.y);
+
 #pragma warning disable 472
                 Ray ray = GetComponent<Camera>().ScreenPointToRay(touch.position);
                 
@@ -72,19 +76,19 @@ public class TouchInput : MonoBehaviour {
 
                     if (touch.phase == TouchPhase.Began)
                     {
-                        recipient.SendMessage("OnTouchDown", hit.point, SendMessageOptions.DontRequireReceiver);
+                        recipient.SendMessage("OnTouchDown", touchPos, SendMessageOptions.DontRequireReceiver);
                     }
                     if (touch.phase == TouchPhase.Ended)
                     {
-                        recipient.SendMessage("OnTouchUp", hit.point, SendMessageOptions.DontRequireReceiver);
+                        recipient.SendMessage("OnTouchUp", touchPos, SendMessageOptions.DontRequireReceiver);
                     }
                     if (touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved)
                     {
-                        recipient.SendMessage("OnTouchStay", hit.point, SendMessageOptions.DontRequireReceiver);
+                        recipient.SendMessage("OnTouchStay", touchPos, SendMessageOptions.DontRequireReceiver);
                     }
                     if (touch.phase == TouchPhase.Canceled)
                     {
-                        recipient.SendMessage("OnTouchExit", hit.point, SendMessageOptions.DontRequireReceiver);
+                        recipient.SendMessage("OnTouchExit", touchPos, SendMessageOptions.DontRequireReceiver);
                     }
                 }
             }
@@ -93,7 +97,8 @@ public class TouchInput : MonoBehaviour {
             {
                 if(!touchList.Contains(g))
                 {
-                    g.SendMessage("OnTouchExit");
+                    Vector2 touchPos = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
+                    g.SendMessage("OnTouchExit", touchPos, SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
