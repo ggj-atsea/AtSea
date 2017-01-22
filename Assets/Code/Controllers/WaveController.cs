@@ -22,8 +22,6 @@ public class WaveController : MonoBehaviour
 		DayNightController.Instance.OnDusk += OnDusk;
 		DayNightController.Instance.OnSunrise += OnSunrise;
 		DayNightController.Instance.OnSunrise += OnSunset;
-		Capsize();
-		DetachPlayer();
 	}
 
 	void OnDestroy()
