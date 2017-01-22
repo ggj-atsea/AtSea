@@ -11,6 +11,7 @@ public class DayNightController : Singleton<DayNightController>
     [SerializeField] private float _sunsetEnd;
 
     [SerializeField] private GameObject _water;
+    [SerializeField] private GameObject _backgroundWater;
     [SerializeField] private Light _light;
 
     [SerializeField] private Color _dayColor;
@@ -89,6 +90,7 @@ public class DayNightController : Singleton<DayNightController>
     private void SetEnvironment(Color start, Color end, float percent) {
         var color = Interp(start, end, percent);
         _water.GetComponent<Renderer>().material.color = color;
+        _backgroundWater.GetComponent<Renderer>().material.color = color;
     }
 
     private void SetLightAngle(float start, float end, float percent) {

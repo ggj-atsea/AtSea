@@ -18,39 +18,14 @@ public class CameraController : MonoBehaviour {
 	private const float OriginalPositionY = 15f;
 	private const float OriginalPositionZ = -9f;
 
-	void Update()
+	void Start()
 	{
-		if(_boat.position.y > -0.2f && _boat.position.y < 0)
-		{
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(45f, transform.rotation.y, transform.rotation.z), 3);
-		}
-		else if(_boat.position.y >= 0)
-		{
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(65f, transform.rotation.y, transform.rotation.z), 3);
-			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(transform.position.x, MaxDistanceY, MaxDistanceZ), "time", 3, "easetype", iTween.EaseType.easeInOutSine));
-		}
-
-		// if(transform.rotation.x < 58 && transform.rotation.x > 50)
-		// {
-		// 	iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(transform.position.x, 11f, -5f), "time", 3, "easetype", iTween.EaseType.easeInOutSine));
-		// }
-		else if(transform.rotation.x <= 50)
-		{
-			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(transform.position.x, 8.9f, -8.6f), "time", 3, "easetype", iTween.EaseType.easeInOutSine));
-			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(transform.position.x, MaxDistanceY, MaxDistanceZ), "time", 3, "easetype", iTween.EaseType.easeInOutSine));
-		}
-		else if(transform.rotation.x < 45)
-		{
-			
-		}
+		StartCoroutine("WiggleCamera");
 	}
 
-	private void TrackPlayer()
+	void Update()
 	{
-		if(_boat.position.y > 0.9f)
-		{
-			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(transform.position.x, MaxDistanceY, MaxDistanceZ), "time", 3, "easetype", iTween.EaseType.easeInOutSine));
-		}
-	}	
-	
+		_camera.transform.LookAt(_player);
+		_camera.transform.position = new Vector3(_player.position.x, _player.position.y + 15, _player.position.z - 9);
+	}
 }

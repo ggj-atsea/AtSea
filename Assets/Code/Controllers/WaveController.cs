@@ -14,7 +14,10 @@ public class WaveController : MonoBehaviour
 	void Start ()
 	{
 		_cloth = GetComponent<Cloth>();
-		_boat = transform.GetChild(0);
+		if(transform.childCount > 0)
+		{
+			_boat = transform.GetChild(0);
+		}
 		GenerateWaves();
 
 		DayNightController.Instance.OnMidnight += OnMidnight;
@@ -52,16 +55,20 @@ public class WaveController : MonoBehaviour
 
 	public void Capsize()
 	{
-		iTween.RotateTo(_boat.gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
+		if(_boat != null)
+			iTween.RotateTo(_boat.gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
 	}
 
 	public void DetachPlayer()
 	{
-		var player = _boat.GetChild(0);
-		player.SetParent(this.transform);
-		player.gameObject.AddComponent<FloatController>();
-		player.transform.position = new Vector3(player.transform.position.x + 5, player.transform.position.y, player.transform.position.z + 5);
-		player.GetComponent<BoxCollider>().enabled = true;
+		if(_boat != null)
+		{
+			var player = _boat.GetChild(0);
+			player.SetParent(this.transform);
+			player.gameObject.AddComponent<FloatController>();
+			player.transform.position = new Vector3(player.transform.position.x + 5, player.transform.position.y, player.transform.position.z + 5);
+			player.GetComponent<BoxCollider>().enabled = true;
+		}
 	}
 
 	public void OnMidnight(int day)
