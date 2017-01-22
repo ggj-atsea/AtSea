@@ -46,6 +46,7 @@ public class WaveController : MonoBehaviour
 		if(largestAcceleration > 50)
 		{
 			Capsize();
+			DetachPlayer();
 		}
 	}
 
