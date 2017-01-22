@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WaveController : MonoBehaviour 
 {
@@ -23,6 +22,20 @@ public class WaveController : MonoBehaviour
 		DayNightController.Instance.OnDusk += OnDusk;
 		DayNightController.Instance.OnSunrise += OnSunrise;
 		DayNightController.Instance.OnSunrise += OnSunset;
+		Capsize();
+		DetachPlayer();
+	}
+
+	void OnDestroy()
+	{
+		if(DayNightController.HasInstance)
+		{
+			DayNightController.Instance.OnMidnight -= OnMidnight;
+			DayNightController.Instance.OnDawn -= OnDawn;
+			DayNightController.Instance.OnDusk -= OnDusk;
+			DayNightController.Instance.OnSunrise -= OnSunrise;
+			DayNightController.Instance.OnSunrise -= OnSunset;
+		}
 	}
 
 	public void AccelerationCheck()
@@ -41,6 +54,15 @@ public class WaveController : MonoBehaviour
 	public void Capsize()
 	{
 		iTween.RotateTo(_boat.gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
+	}
+
+	public void DetachPlayer()
+	{
+		var player = _boat.GetChild(0);
+		player.SetParent(this.transform);
+		player.gameObject.AddComponent<FloatController>();
+		player.transform.position = new Vector3(player.transform.position.x + 5, player.transform.position.y, player.transform.position.z + 5);
+		player.GetComponent<BoxCollider>().enabled = true;
 	}
 
 	public void OnMidnight(int day)
