@@ -28,6 +28,7 @@ public class PlayerController : Singleton<PlayerController>
         DayNightController.Instance.OnDusk += OnDusk;
         DayNightController.Instance.OnMidnight += OnMidnight;
         DayNightController.Instance.OnDawn += OnDawn;
+        DayNightController.Instance.OnSunrise += OnSunrise;
 	}
 
     void OnDestroy() {
@@ -35,6 +36,7 @@ public class PlayerController : Singleton<PlayerController>
             DayNightController.Instance.OnDusk -= OnDusk;
             DayNightController.Instance.OnMidnight -= OnMidnight;
             DayNightController.Instance.OnDawn -= OnDawn;
+            DayNightController.Instance.OnSunrise -= OnSunrise;
         }
     }
 
@@ -72,6 +74,15 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
+    void OnSunrise(int day) {
+        if (Hunger >= HungerMax / 2) {
+            UI.Instance.SetSubtitle("I'm starving...");
+        }
+        else if (Thirst >= ThirstMax / 2) {
+            UI.Instance.SetSubtitle("I'm thirsty...");
+        }
+    }
+
     public void EatFood()
     {
         Hunger -= 5.0f;
@@ -83,7 +94,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void DrinkWater()
     {
-        Thirst -= 5.0f;
+        Thirst -= 2.0f;
         if(Thirst <= 0)
             Thirst = 0;
  
