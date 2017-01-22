@@ -8,6 +8,8 @@ public class BoatController : Singleton<BoatController>, IInteractable
     private Vector3 _motion;
 
     [SerializeField] private GameObject _trail;
+    [SerializeField] private GameObject _canopy;
+    [SerializeField] private GameObject _light;
 
     void Start()
     {
@@ -93,5 +95,17 @@ public class BoatController : Singleton<BoatController>, IInteractable
         if(playerController.GetComponent<FloatController>() != null)
           playerController.GetComponent<FloatController>().enabled = false;
         playerController.transform.localPosition = new Vector3(0, 0.81f, 0);
+    }
+
+    public void ShowCanopy()
+    {
+        _canopy.SetActive(true);
+        _light.SetActive(false);
+    }
+
+    public void HideCanopy()
+    {
+        _canopy.SetActive(false);
+        _light.SetActive(true);
     }
 }
