@@ -20,7 +20,7 @@ public class Clock : Singleton<Clock>
 	void Update()
     {
         _hour += (UnityEngine.Time.deltaTime * 24) / _secondsInDay;
-        if (_hour > 24.0f) {
+        if (_hour > 24.0f && GameController.Instance.GameOver == false) {
             _hour -= 24.0f;
             ++_day;
         }
