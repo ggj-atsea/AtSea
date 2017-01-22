@@ -24,11 +24,6 @@ public class WaveController : MonoBehaviour
 		DayNightController.Instance.OnSunrise += OnSunset;
 	}
 
-	void Update()
-	{
-		AccelerationCheck();
-	}
-
 	public void AccelerationCheck()
 	{
 		var largestAcceleration = Mathf.Max(
@@ -51,6 +46,7 @@ public class WaveController : MonoBehaviour
 	{
 		CalmWaves();
 		Turbulence();
+		AccelerationCheck();
 	}
 
 	public void OnDawn(int day)
@@ -62,18 +58,21 @@ public class WaveController : MonoBehaviour
 	{
 		CalmWaves();
 		Turbulence();
+		AccelerationCheck();
 	}
 
 	public void OnSunrise(int day)
 	{
 		CalmWaves();
 		Turbulence();
+		AccelerationCheck();
 	}
 
 	public void OnSunset(int day)
 	{
 		CalmWaves();
 		Turbulence();
+		AccelerationCheck();
 	}
 
 	public void GenerateWaves()
