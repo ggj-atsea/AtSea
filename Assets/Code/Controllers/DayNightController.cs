@@ -34,7 +34,6 @@ public class DayNightController : Singleton<DayNightController>
         if (time < _sunriseStart) {
             SetEnvironment(_nightColor, _nightColor, 0.0f);
             SetLightIntensity(0.0f, 0.0f, 0.0f);
-            UI.Instance.SetSubtitle("Night...");
 
             if (_lastTime > time && OnMidnight != null)
                 OnMidnight(day);
@@ -43,7 +42,6 @@ public class DayNightController : Singleton<DayNightController>
             float percent = (time - _sunriseStart) / (_sunriseEnd - _sunriseStart);
             SetEnvironment(_nightColor, _dayColor, percent);
             SetLightIntensity(0.0f, 1.0f, percent);
-            UI.Instance.SetSubtitle("Sunrise.");
 
             if (_lastTime < _sunriseStart && OnDawn != null) {
                 OnDawn(day);
@@ -52,7 +50,6 @@ public class DayNightController : Singleton<DayNightController>
         else if (time < _sunsetStart) {
             SetEnvironment(_dayColor, _dayColor, 0.0f);
             SetLightIntensity(1.0f, 1.0f, 0.0f);
-            UI.Instance.SetSubtitle("Daytime.");
 
             if (_lastTime < _sunriseEnd && OnSunrise != null) {
                 OnSunrise(day);
@@ -62,7 +59,6 @@ public class DayNightController : Singleton<DayNightController>
             float percent = (time - _sunsetStart) / (_sunsetEnd - _sunsetStart);
             SetEnvironment(_dayColor, _nightColor, percent);
             SetLightIntensity(1.0f, 0.0f, percent);
-            UI.Instance.SetSubtitle("Sunset.");
 
             if (_lastTime < _sunsetStart && OnSunset != null) {
                 OnSunset(day);
@@ -71,7 +67,6 @@ public class DayNightController : Singleton<DayNightController>
         else { // time >= _sunsetEnd)
             SetEnvironment(_nightColor, _nightColor, 0.0f);
             SetLightIntensity(0.0f, 0.0f, 0.0f);
-            UI.Instance.SetSubtitle("Night...");
 
             if (_lastTime < _sunsetEnd && OnDusk != null) {
                 OnDusk(day);

@@ -13,16 +13,19 @@ public class Clock : Singleton<Clock>
     public int Day { get { return _day; } }
 
 	void Start() {
-        _hour = 0.0f;
+        _hour = 4.0f;
         _day = 0;
 	}
 	
 	void Update()
     {
-        _hour += (UnityEngine.Time.deltaTime * 24) / _secondsInDay;
-        if (_hour > 24.0f && GameController.Instance.GameOver == false) {
-            _hour -= 24.0f;
-            ++_day;
+        if (GameController.Instance.GameStarted)
+        {
+            _hour += (UnityEngine.Time.deltaTime * 24) / _secondsInDay;
+            if (_hour > 24.0f && GameController.Instance.GameOver == false) {
+                _hour -= 24.0f;
+                ++_day;
+            }
         }
 	}
 }

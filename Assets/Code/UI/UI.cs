@@ -11,15 +11,20 @@ public class UI : Singleton<UI> {
     [SerializeField] private UIText _gameOver;
 
     [SerializeField] private GameObject _blackout;
+    [SerializeField] private GameObject _splash;
 
     [SerializeField] private InventoryView _inventory;
+    [SerializeField] private CompassView _compass;
+
+    public InventoryView Inventory { get { return _inventory; } }
+    public CompassView Compass { get { return _compass; } }
 
     public void SetSubtitle(string message) {
         _subtitle.SetText(message, 3.0f, 1.0f);
     }
 
     public void SetDay(int day) {
-        _day.SetText("Day " + day, 3.0f, 1.0f);
+        _day.SetText("Day " + (day+1), 3.0f, 1.0f);
     }
 
     public void GameOver(string message) {
@@ -73,6 +78,12 @@ public class UI : Singleton<UI> {
     public void FadeIn() {
 		LeanTween.alpha(_blackout.GetComponent<RectTransform>(), 0.0f, 0.6f).setOnComplete(
             () => { _blackout.SetActive(false); }
+        );
+    }
+
+    public void HideSplash() {
+        LeanTween.alpha(_splash.GetComponent<RectTransform>(), 0.0f, 1.0f).setOnComplete(
+            () => { _splash.SetActive(false); }
         );
     }
 }

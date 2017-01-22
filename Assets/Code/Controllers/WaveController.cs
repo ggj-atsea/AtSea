@@ -24,7 +24,7 @@ public class WaveController : MonoBehaviour
         DayNightController.Instance.OnDawn += OnDawn;
 		DayNightController.Instance.OnDusk += OnDusk;
 		DayNightController.Instance.OnSunrise += OnSunrise;
-		DayNightController.Instance.OnSunrise += OnSunset;
+		DayNightController.Instance.OnSunset += OnSunset;
 	}
 
 	void OnDestroy()
@@ -35,7 +35,7 @@ public class WaveController : MonoBehaviour
 			DayNightController.Instance.OnDawn -= OnDawn;
 			DayNightController.Instance.OnDusk -= OnDusk;
 			DayNightController.Instance.OnSunrise -= OnSunrise;
-			DayNightController.Instance.OnSunrise -= OnSunset;
+			DayNightController.Instance.OnSunset -= OnSunset;
 		}
 	}
 
