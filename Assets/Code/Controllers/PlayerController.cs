@@ -41,7 +41,7 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnDusk(int day) {
-        In(3.0f, () => SetState("asleep"));
+        In(2.0f, () => SetState("asleep"));
     }
 
     void OnMidnight(int day) {
