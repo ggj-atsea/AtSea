@@ -31,6 +31,11 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
 	void OnEnable()
 	{
+		if(_player == null)
+		{
+			_player = transform.parent.GetComponentInChildren<PlayerController>();
+		}
+		
 		DayNightController.Instance.OnDusk += OnMidnight;
 		speed = Random.Range(MaxSpeed, MinSpeed);
 		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
