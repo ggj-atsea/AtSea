@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BoatController : MonoBehaviour, IInteractable
 {
@@ -60,7 +59,6 @@ public class BoatController : MonoBehaviour, IInteractable
 
 	public void FlipBoat()
 	{
-		if(transform.rotation.z == 0) return;
-		transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0f), Time.deltaTime);
+		iTween.RotateTo(gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 0f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
 	}
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class WaveController : MonoBehaviour 
 {
@@ -39,7 +40,7 @@ public class WaveController : MonoBehaviour
 
 	public void Capsize()
 	{
-		_boat.rotation = Quaternion.Lerp(_boat.rotation, Quaternion.Euler(_boat.rotation.x, _boat.rotation.y, 180f), Time.deltaTime);
+		iTween.RotateTo(_boat.gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
 	}
 
 	public void OnMidnight(int day)
