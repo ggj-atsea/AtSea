@@ -22,10 +22,10 @@ public class UI : Singleton<UI> {
         _day.SetText("Day " + day, 3.0f, 1.0f);
     }
 
-    public void GameOver() {
+    public void GameOver(string message) {
         _blackout.SetActive(true);
         _gameOver._text.enabled = true;
-        //_gameOver.SetText();
+        _gameOver.SetText(message, 30.0f, 1.0f);
     }
 
     public void ShowInventory() {

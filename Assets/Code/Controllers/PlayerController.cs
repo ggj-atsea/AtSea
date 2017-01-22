@@ -20,8 +20,6 @@ public class PlayerController : Singleton<PlayerController>
     public float ThirstPercent() { return Thirst / ThirstMax; }
     public float FatiguePercent() { return Fatigue / FatigueMax; }
 
-    private bool _gameOver = false;
-
 	// Use this for initialization
 	void Start() {
         Hunger = 0.0f;
@@ -45,8 +43,12 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnMidnight(int day) {
-        if (Hunger >= HungerMax || Thirst >= ThirstMax)
-            _gameOver = true;
+        if (Hunger >= HungerMax) {
+            GameController.Instance.LoseGame("died of starvation");
+        }
+        else if (Thirst >= ThirstMax) {
+            GameController.Instance.LoseGame("died from dehydration");
+        }
 
         Hunger += 1.0f;
         Thirst += 1.0f;
@@ -56,8 +58,8 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnDawn(int day) {
-        if (_gameOver) {
-            UI.Instance.GameOver();
+        if (GameController.Instance.GameOver) {
+            GameController.Instance.ShowEnding();
         }
         else {
             // Wake up
@@ -86,14 +88,6 @@ public class PlayerController : Singleton<PlayerController>
             Thirst = 0;
  
         HUD.Instance.UpdateStats(this);
-    }
-
-    private void In(float seconds, Action action) {
-        StartCoroutine(InCo(seconds, action));
-    }
-    private IEnumerator InCo(float seconds, Action action) {
-        yield return new WaitForSeconds(seconds);
-        action();
     }
 
     #region State Management
