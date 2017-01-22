@@ -12,6 +12,8 @@ public class UI : Singleton<UI> {
 
     [SerializeField] private GameObject _blackout;
 
+    [SerializeField] private InventoryView _inventory;
+
     public void SetSubtitle(string message) {
         _subtitle.SetText(message, 3.0f, 1.0f);
     }
@@ -24,6 +26,10 @@ public class UI : Singleton<UI> {
         _blackout.SetActive(true);
         _gameOver._text.enabled = true;
         //_gameOver.SetText();
+    }
+
+    public void ShowInventory() {
+        _inventory.ShowPlayerInventory();
     }
 
     // Helper class for handling text state

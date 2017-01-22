@@ -13,19 +13,7 @@ public class InventoryView : Singleton<InventoryView> {
     
     [SerializeField] private InventoryCard _card;
 
-    public static void ShowPlayerInventory()
-    {
-        Instance.gameObject.SetActive(true);
-        Instance.SetupPlayer();
-    }
-
-    public static void ShowPackageInventory()
-    {
-        Instance.gameObject.SetActive(true);
-        Instance.SetupPackage();
-    }
-
-    #region Populate UI
+    // Populate UI
 
     private void PopulatePlayerContents() {
         // TODO : get this data from somewhere
@@ -35,8 +23,7 @@ public class InventoryView : Singleton<InventoryView> {
         items.Add("ack");
 
         foreach (var item in items) {
-            var card = Instantiate(_card);
-            card.transform.SetParent(_playerContents.transform);
+            var card = Instantiate(_card, _playerContents.transform, false);
         }
     }
 
@@ -48,16 +35,28 @@ public class InventoryView : Singleton<InventoryView> {
         items.Add("ack");
 
         foreach (var item in items) {
-            var card = Instantiate(_card);
-            card.transform.SetParent(_playerContents.transform);
+            var card = Instantiate(_card, _packageContents.transform, false);
         }
     }
 
-    #endregion
+    // Show inventory dialog
 
-    #region Initialization Methods
+    public void ShowPlayerInventory() {
+        Reset();
+        _packageInventory.SetActive(false);
+        PopulatePlayerContents();
+    }
+
+    public void ShowPackageInventory() {
+        Reset();
+        _packageInventory.SetActive(true);
+        PopulatePlayerContents();
+        PopulatePackageContents();
+    }
 
     private void Reset() {
+        gameObject.SetActive(true);
+
         foreach (Transform child in _playerContents.transform) {
             Destroy(child.gameObject);
         }
@@ -66,28 +65,11 @@ public class InventoryView : Singleton<InventoryView> {
         }
     }
 
-    private void SetupPlayer() {
-        Reset();
-        _packageInventory.SetActive(false);
-        PopulatePlayerContents();
-    }
-
-    private void SetupPackage() {
-        Reset();
-        _packageInventory.SetActive(true);
-        PopulatePlayerContents();
-        PopulatePackageContents();
-    }
-
-    #endregion
-
-    #region UI Callbacks
+    // Hide dialog
 
     public void Close()
     {
         gameObject.SetActive(false);
     }
-
-    #endregion
 }
 
