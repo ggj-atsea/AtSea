@@ -23,7 +23,6 @@ public class TouchInput : MonoBehaviour {
             if (Physics.Raycast(ray, out hit))
 #pragma warning restore 472
             {
-                Debug.Log("TAPPED " + hit.collider.gameObject.name);
                 GameObject recipient = hit.transform.gameObject;
                 touchList.Add(recipient);
 
@@ -68,7 +67,6 @@ public class TouchInput : MonoBehaviour {
                 if (Physics.Raycast(ray, out hit))
 #pragma warning restore 472
                 {
-                    Debug.Log("TAPPED " + hit.collider.gameObject.name);
                     GameObject recipient = hit.transform.gameObject;
                     touchList.Add(recipient);
 

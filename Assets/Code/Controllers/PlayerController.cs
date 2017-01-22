@@ -34,4 +34,18 @@ public class PlayerController : MonoBehaviour
 
         HUD.Instance.UpdateStats(this);
     }
+
+    public void EatFood()
+    {
+        Hunger -= 5.0f;
+        if(Hunger <= 0)
+            Hunger = 0;
+    }
+
+    public void DrinkWater()
+    {
+        Thirst -= 5.0f;
+        if(Thirst <= 0)
+            Thirst = 0;
+    }
 }
