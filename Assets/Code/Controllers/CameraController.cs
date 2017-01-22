@@ -18,11 +18,6 @@ public class CameraController : MonoBehaviour {
 	private const float OriginalPositionY = 15f;
 	private const float OriginalPositionZ = -9f;
 
-	void Start()
-	{
-		StartCoroutine("WiggleCamera");
-	}
-
 	void Update()
 	{
 		_camera.transform.LookAt(_player);
