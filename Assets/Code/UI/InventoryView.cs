@@ -12,18 +12,29 @@ public class InventoryView : Singleton<InventoryView> {
     [SerializeField] private GridLayoutGroup _packageContents;
     
     [SerializeField] private InventoryCard _card;
+    [SerializeField] private Sprite _food;
+    [SerializeField] private Sprite _water;
 
     // Populate UI
 
     private void PopulatePlayerContents() {
         // TODO : get this data from somewhere
-        var items = new List<string>();
-        items.Add("foo");
-        items.Add("bar");
-        items.Add("ack");
+        var items = Inventory.Items;
+
+        if(items == null)
+        {
+            return;
+        }
 
         foreach (var item in items) {
             var card = Instantiate(_card, _playerContents.transform, false);
+            var image = string.Equals(item.Key.Name, "Food") ? _food : _water;
+            card.transform.GetChild(0).GetComponent<Image>().sprite = image;
+            card.GetComponent<Button>().onClick.AddListener(() => {
+                Inventory.RemoveItem(item.Key);
+                ShowPlayerInventory();
+            });
+            card.transform.GetChild(2).GetComponent<Text>().text = item.Value.ToString();
         }
     }
 

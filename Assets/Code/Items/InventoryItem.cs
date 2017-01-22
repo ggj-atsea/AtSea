@@ -1,21 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-public class InventoryItem : MonoBehaviour, IInteractable
+public class InventoryItem : IInteractable
 {       
     [SerializeField] public string Name;
-    [SerializeField] public int Width;
-    [SerializeField] public int Height;
-    [SerializeField] public int Weight;
     [SerializeField] private int itemDurability = 100;
-    [SerializeField] private int durabilityReduction;
+    [SerializeField] private int durabilityReduction = 25;
     
-    public InventoryItem(string itemName, int temWidth, int itemHeight, int  itemWeight)
+    public InventoryItem(string itemName)
     {
         this.Name = itemName;
-        this.Width = temWidth;
-        this.Height = itemHeight;
-        this.Weight = itemWeight;
     }
     
     public void ReduceDurability()
