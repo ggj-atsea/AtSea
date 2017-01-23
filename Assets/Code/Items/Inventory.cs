@@ -47,7 +47,7 @@ public class Inventory : MonoBehaviour
 	
 	public static void RemoveItem(InventoryItem item)
 	{
-		if(Items[item] <= 1)
+		//if(Items[item] <= 1)
 		{
 			switch(item.Name)
 			{

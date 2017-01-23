@@ -9,5 +9,5 @@ tags.meta
 ~*
 Library/
 Temp/
-Build/
+Builds/
 .vscode
