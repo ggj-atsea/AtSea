@@ -16,7 +16,7 @@ public class IslandController : Behavior, IInteractable
         else
             GameController.Instance.WinGame("were rescued by a passing ship");
 
-        Clock.Instance.FastForwardToEOD();
+        GameController.Instance.ShowEnding();
     }
 
     public void OnTouchUp(Vector2 point)
