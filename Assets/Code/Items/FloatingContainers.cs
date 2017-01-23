@@ -48,12 +48,12 @@ public class FloatingContainers : MonoBehaviour, IInteractable
         
 		DayNightController.Instance.OnDusk += OnDusk;
 		speed = Random.Range(MaxSpeed, MinSpeed);
-		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
-		transform.position = _containerStartingLocation;
 	}
 
 	void OnDisable()
 	{
+		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
+		transform.position = _containerStartingLocation;
 		DayNightController.Instance.OnDusk -= OnDusk;
 	}
     
@@ -95,7 +95,6 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 			Debug.Log ("Adding " + item.Value.Name + " to container. At index " + item.Key);
 		}
 
-        
 		InventoryView.Instance.PopulatePackageContents();
 		InventoryView.Instance.ShowPackageInventory();
 
