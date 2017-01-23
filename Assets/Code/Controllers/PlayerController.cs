@@ -45,7 +45,7 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnDusk(int day) {
-        In(2.0f, () => {
+        In(0.5f, () => {
             SetState("sleeping");
             BoatController.Instance.ShowCanopy();
            });
