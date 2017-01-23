@@ -6,10 +6,10 @@ public class LandmarkController : Singleton<LandmarkController> {
 
     private float _kShippingLaneDistMin = 10.0f;
     private float _kShippingLaneDistMax = 50.0f;
-    private float _kShowShippingLane = 5.0f;
+    private float _kShowShippingLane = 8.0f;
     private float _kIslandDistMin = 10.0f;
     private float _kIslandDistMax = 50.0f;
-    private float _kShowIsland = 5.0f;
+    private float _kShowIsland = 8.0f;
 
     [SerializeField] private GameObject _shippingLaneObj;
     [SerializeField] private GameObject _islandObj;
@@ -92,14 +92,14 @@ public class LandmarkController : Singleton<LandmarkController> {
 
     private void ShowShippingLane(bool show)
     {
-        Vector2 pos = _shippingLane.normalized * 15;
+        Vector2 pos = _shippingLane.normalized * 10;
         _shippingLaneObj.SetActive(show);
         _shippingLaneObj.transform.position = new Vector3(pos.x, 0, pos.y);
     }
 
     private void ShowIsland(bool show)
     {
-        Vector2 pos = _island.normalized * 15;
+        Vector2 pos = _island.normalized * 10;
         _islandObj.SetActive(show);
         _islandObj.transform.position = new Vector3(pos.x, 0, pos.y);
     }

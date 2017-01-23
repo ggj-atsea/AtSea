@@ -16,6 +16,7 @@ public class IslandController : Behavior, IInteractable
         else
             GameController.Instance.WinGame("were rescued by a passing ship");
 
+        UI.Instance.FadeOut();
         GameController.Instance.ShowEnding();
     }
 
