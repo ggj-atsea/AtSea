@@ -25,7 +25,7 @@ public class BoatController : Singleton<BoatController>, IInteractable
 
     void OnDusk(int day)
     {
-        LandmarkController.Instance.MovePlayer(_motion);
+        LandmarkController.Instance.MovePlayer(transform.position);
     }
 
     public void OnTouchDown(Vector2 point)

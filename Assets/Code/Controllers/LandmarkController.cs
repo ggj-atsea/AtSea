@@ -6,8 +6,13 @@ public class LandmarkController : Singleton<LandmarkController> {
 
     private float _kShippingLaneDistMin = 10.0f;
     private float _kShippingLaneDistMax = 50.0f;
+    private float _kShowShippingLane = 5.0f;
     private float _kIslandDistMin = 10.0f;
     private float _kIslandDistMax = 50.0f;
+    private float _kShowIsland = 5.0f;
+
+    [SerializeField] private GameObject _shippingLaneObj;
+    [SerializeField] private GameObject _islandObj;
 
     private Vector2 _raft;
     private Vector2 _shippingLane;
@@ -55,12 +60,19 @@ public class LandmarkController : Singleton<LandmarkController> {
         if (_rotation < -180.0f) {
             _rotation += 360.0f;
         }
+        _rotation = 0.0f;
 
         UI.Instance.Compass.UpdateLandmarks(this);
+
+        ShowShippingLane(_shippingLane.magnitude < _kShowShippingLane);
+        ShowIsland(_island.magnitude < _kShowIsland);
     }
 
     public Vector2 BoatPos() {
-        return _shippingLane.normalized;
+        var result = _shippingLane.normalized;
+        if (_shippingLane.magnitude < _kShippingLaneDistMin)
+            result *= (_shippingLane.magnitude / _kShippingLaneDistMin);
+        return result;
     }
 
     public float BoatFade() {
@@ -68,11 +80,28 @@ public class LandmarkController : Singleton<LandmarkController> {
     }
 
     public Vector2 IslandPos() {
-        return _island.normalized;
+        var result = _island.normalized;
+        if (_island.magnitude < _kIslandDistMin)
+            result *= (_island.magnitude / _kIslandDistMin);
+        return result;
     }
 
     public float IslandFade() {
         return 1.0f - (_island.magnitude - _kIslandDistMin) / (_kIslandDistMax - _kIslandDistMin);
+    }
+
+    private void ShowShippingLane(bool show)
+    {
+        Vector2 pos = _shippingLane.normalized * 15;
+        _shippingLaneObj.SetActive(show);
+        _shippingLaneObj.transform.position = new Vector3(pos.x, 0, pos.y);
+    }
+
+    private void ShowIsland(bool show)
+    {
+        Vector2 pos = _island.normalized * 15;
+        _islandObj.SetActive(show);
+        _islandObj.transform.position = new Vector3(pos.x, 0, pos.y);
     }
 }
 

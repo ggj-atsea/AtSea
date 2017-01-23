@@ -28,5 +28,11 @@ public class Clock : Singleton<Clock>
             }
         }
 	}
+
+    public void FastForwardToEOD()
+    {
+        if (_hour < 18)
+            _hour = 18;
+    }
 }
 
