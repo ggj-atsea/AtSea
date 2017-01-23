@@ -9,11 +9,13 @@ public class WaveController : MonoBehaviour
 	private float TurbulenceMax = 20f;
 	[SerializeField] private float CapsizeSpeed = 10f;
 	private Transform _boat;
+	private Transform _player;
 
 	// Use this for initialization
 	void Start ()
 	{
 		_cloth = GetComponent<Cloth>();
+
 		if(transform.childCount > 0)
 		{
 			_boat = transform.GetChild(0);
@@ -21,7 +23,6 @@ public class WaveController : MonoBehaviour
 		GenerateWaves();
 
         DayNightController.Instance.OnDawn += OnDawn;
-		DayNightController.Instance.OnSunset += OnSunset;
 	}
 
 	void OnDestroy()
@@ -29,7 +30,6 @@ public class WaveController : MonoBehaviour
 		if(DayNightController.HasInstance)
 		{
 			DayNightController.Instance.OnDawn -= OnDawn;
-			DayNightController.Instance.OnSunset -= OnSunset;
 		}
 	}
 
@@ -39,8 +39,8 @@ public class WaveController : MonoBehaviour
 			_cloth.externalAcceleration.x + _cloth.externalAcceleration.y + _cloth.externalAcceleration.z,
 			_cloth.randomAcceleration.x + _cloth.randomAcceleration.y + _cloth.randomAcceleration.z
 		);
-
-		if(largestAcceleration > 50)
+        
+		if(largestAcceleration > 30)
 		{
 			Capsize();
 			DetachPlayer();
@@ -49,8 +49,10 @@ public class WaveController : MonoBehaviour
 
 	public void Capsize()
 	{
-		if(_boat != null)
-			iTween.RotateTo(_boat.gameObject, iTween.Hash("rotation", new Vector3(transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
+		if (_boat != null) {
+			iTween.RotateTo (_boat.gameObject, iTween.Hash ("rotation", new Vector3 (transform.position.x, transform.position.y, 180f), "easetype", iTween.EaseType.easeInOutSine, "time", 1.3f));
+
+		}
 	}
 
 	public void DetachPlayer()
@@ -61,7 +63,22 @@ public class WaveController : MonoBehaviour
 			player.SetParent(this.transform);
 			player.gameObject.AddComponent<FloatController>();
 			player.transform.position = new Vector3(player.transform.position.x + 5, player.transform.position.y, player.transform.position.z + 5);
-			player.GetComponent<BoxCollider>().enabled = true;
+
+			if(player.GetComponent<BoxCollider>() != null)
+				player.GetComponent<BoxCollider>().enabled = true;
+		}
+	}
+
+	void Update()
+	{
+		if (_player == null && _boat != null && _boat.FindChild("Player") != null) {
+			_player = _boat.FindChild ("Player");
+		}
+
+		if (_player.parent != _boat) {
+			if (_player.GetComponent<BoxCollider> () == null) {
+				_player.gameObject.AddComponent<BoxCollider> ();
+			}
 		}
 	}
 
@@ -86,7 +103,7 @@ public class WaveController : MonoBehaviour
 
 	public void Turbulence()
 	{
-		var turbulenceFactor = Random.Range(0, 3);
+		var turbulenceFactor = Random.Range(0, 4);
 
 		switch(turbulenceFactor)
 		{

@@ -88,7 +88,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
     public void OnTouchDown(Vector2 point)
     {
-		
+		Debug.Log ("You got me");
 		foreach (var item in _insideContainer) {
 			
 			Inventory.AddContainerItem (item.Value, item.Key);
@@ -98,19 +98,6 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		InventoryView.Instance.PopulatePackageContents();
 		InventoryView.Instance.ShowPackageInventory();
 
-		/*switch(_containerContents)
-		{
-			case ContainerSupply.Food:
-				Inventory.AddItem(new InventoryItem("Food"));
-				break;
-			case ContainerSupply.Water:
-				Inventory.AddItem(new InventoryItem("Water"));
-				break;
-			case ContainerSupply.Item:
-				break;
-			default: Debug.Log("What is this container doing here...?");
-				break;
-		}*/
         gameObject.SetActive(false);
     }
 
