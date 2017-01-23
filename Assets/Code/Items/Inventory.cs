@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class Inventory : MonoBehaviour
 {
 	public static Dictionary<InventoryItem, int> Items;
+	public static Dictionary<int, InventoryItem> ContainerItems;
 	//public GameObject inventoryPanel;
 	[SerializeField] private static int maxCapacity = 25;
 	[SerializeField] private static int currentCapacity = 0;
@@ -14,6 +15,7 @@ public class Inventory : MonoBehaviour
 	void Start()
 	{
 		Items = new Dictionary<InventoryItem, int>();
+		ContainerItems = new Dictionary<int, InventoryItem> ();
 	}
 
 	public static void AddItem(InventoryItem item)
@@ -54,6 +56,21 @@ public class Inventory : MonoBehaviour
 		}
 		Items[item] -= 1;
 		Debug.Log("Consumed 1 " + item.Name + ". " + Items[item] + " remaining.");
+	}
+
+	public static void AddContainerItem(InventoryItem item, int index)
+	{
+		ContainerItems.Add(index, item);
+		Debug.Log("Adding new " + item.Name + " to container inventory. WithKey " + index);
+	}
+
+	public static void RemoveContainerItem(int index)
+	{
+		Debug.Log ("Attempting to remove at index " + index + ". Container items has length of " + ContainerItems.Count);
+
+		var item = ContainerItems [index];
+		ContainerItems.Remove (index);
+		AddItem (item);
 	}
 
 	// public void ToggleInterface()

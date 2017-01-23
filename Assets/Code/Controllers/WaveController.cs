@@ -20,10 +20,7 @@ public class WaveController : MonoBehaviour
 		}
 		GenerateWaves();
 
-		DayNightController.Instance.OnMidnight += OnMidnight;
         DayNightController.Instance.OnDawn += OnDawn;
-		DayNightController.Instance.OnDusk += OnDusk;
-		DayNightController.Instance.OnSunrise += OnSunrise;
 		DayNightController.Instance.OnSunset += OnSunset;
 	}
 
@@ -31,10 +28,7 @@ public class WaveController : MonoBehaviour
 	{
 		if(DayNightController.HasInstance)
 		{
-			DayNightController.Instance.OnMidnight -= OnMidnight;
 			DayNightController.Instance.OnDawn -= OnDawn;
-			DayNightController.Instance.OnDusk -= OnDusk;
-			DayNightController.Instance.OnSunrise -= OnSunrise;
 			DayNightController.Instance.OnSunset -= OnSunset;
 		}
 	}
@@ -71,30 +65,11 @@ public class WaveController : MonoBehaviour
 		}
 	}
 
-	public void OnMidnight(int day)
-	{
-		CalmWaves();
-		Turbulence();
-		AccelerationCheck();
-	}
-
 	public void OnDawn(int day)
 	{
 		CalmWaves();
-	}
-
-	public void OnDusk(int day)
-	{
-		CalmWaves();
-		Turbulence();
-		AccelerationCheck();
-	}
-
-	public void OnSunrise(int day)
-	{
-		CalmWaves();
-		Turbulence();
-		AccelerationCheck();
+        Turbulence();
+        AccelerationCheck();
 	}
 
 	public void OnSunset(int day)

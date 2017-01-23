@@ -17,8 +17,13 @@ public class InventoryView : Singleton<InventoryView> {
 
     // Populate UI
 
+	void Start()
+	{
+		base.Start ();
+		gameObject.SetActive (false);
+	}
+
     private void PopulatePlayerContents() {
-        // TODO : get this data from somewhere
         var items = Inventory.Items;
 
         if(items == null)
@@ -38,15 +43,18 @@ public class InventoryView : Singleton<InventoryView> {
         }
     }
 
-    private void PopulatePackageContents() {
-        // TODO : get this data from somewhere
-        var items = new List<string>();
-        items.Add("foo");
-        items.Add("bar");
-        items.Add("ack");
-
-        foreach (var item in items) {
+    public void PopulatePackageContents() {
+		foreach(var item in Inventory.ContainerItems)
+		{
             var card = Instantiate(_card, _packageContents.transform, false);
+			var image = string.Equals (item.Value.Name, "Food") ? _food : _water;
+			Debug.Log ("Child 3 : " + card.transform.GetChild (0).name);
+			card.transform.GetChild (0).GetComponent<Image>().sprite = image;
+			card.GetComponent<Button> ().onClick.AddListener (() => {
+				Inventory.RemoveContainerItem(item.Key);
+				ShowPackageInventory();
+			});
+			card.transform.GetChild (2).GetComponent<Text> ().text = "1";
         }
     }
 
@@ -55,7 +63,7 @@ public class InventoryView : Singleton<InventoryView> {
     public void ShowPlayerInventory() {
         Reset();
         _packageInventory.SetActive(false);
-        PopulatePlayerContents();
+		PopulatePlayerContents();
     }
 
     public void ShowPackageInventory() {

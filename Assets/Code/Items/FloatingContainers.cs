@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public enum ContainerSupply
 {
@@ -14,7 +15,9 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 	[SerializeField] private ContainerSupply _containerContents;
 	[SerializeField] private PlayerController _player;
 	[SerializeField] private Vector3 _containerStartingLocation;
-
+    [SerializeField] private Dictionary<int, InventoryItem> _insideContainer;
+    
+    private const int MaxContainerItems = 6;
 	private const float ContainerMaxX = 15.0f;
 	private const float ContainerMinX = -15.0f;
 	private const float ContainerMinZ = 16.0f;
@@ -36,7 +39,14 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 			_player = transform.parent.GetComponentInChildren<PlayerController>();
 		}
 		
-		DayNightController.Instance.OnDusk += OnMidnight;
+        if(_insideContainer == null)
+        {
+            _insideContainer = new Dictionary<int, InventoryItem>();
+        }
+        
+        GenerateContainerItems();
+        
+		DayNightController.Instance.OnDusk += OnDusk;
 		speed = Random.Range(MaxSpeed, MinSpeed);
 		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
 		transform.position = _containerStartingLocation;
@@ -44,8 +54,19 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
 	void OnDisable()
 	{
-		DayNightController.Instance.OnDusk -= OnMidnight;
+		DayNightController.Instance.OnDusk -= OnDusk;
 	}
+    
+    public void GenerateContainerItems()
+    {
+		var numberOfItemsInContainer = Random.Range(1, MaxContainerItems);
+        for(int i = 0; i < numberOfItemsInContainer; i++)
+        {
+            var item = Random.Range(0, 2) == 0 ? "Food" : "Water";
+            _insideContainer.Add(i, new InventoryItem(item));
+        }
+
+    }
 
 	public void DisableOffScreen()
 	{
@@ -60,14 +81,25 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		transform.Translate(new Vector3(0, 0, speed) * Time.deltaTime);
 	}
 
-	public void OnMidnight(int day)
+	public void OnDusk(int day)
 	{
 		gameObject.SetActive(false);
 	}
 
     public void OnTouchDown(Vector2 point)
     {
-		switch(_containerContents)
+		
+		foreach (var item in _insideContainer) {
+			
+			Inventory.AddContainerItem (item.Value, item.Key);
+			Debug.Log ("Adding " + item.Value.Name + " to container. At index " + item.Key);
+		}
+
+        
+		InventoryView.Instance.PopulatePackageContents();
+		InventoryView.Instance.ShowPackageInventory();
+
+		/*switch(_containerContents)
 		{
 			case ContainerSupply.Food:
 				Inventory.AddItem(new InventoryItem("Food"));
@@ -79,7 +111,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 				break;
 			default: Debug.Log("What is this container doing here...?");
 				break;
-		}
+		}*/
         gameObject.SetActive(false);
     }
 
