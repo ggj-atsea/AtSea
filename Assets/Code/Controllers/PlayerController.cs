@@ -20,6 +20,9 @@ public class PlayerController : Singleton<PlayerController>
     public float ThirstPercent() { return Thirst / ThirstMax; }
     public float FatiguePercent() { return Fatigue / FatigueMax; }
 
+    public bool HasMap { get; private set; }
+    public bool HasOar { get; private set; }
+
 	// Use this for initialization
 	void Start() {
         Hunger = 0.0f;
@@ -29,6 +32,7 @@ public class PlayerController : Singleton<PlayerController>
         DayNightController.Instance.OnMidnight += OnMidnight;
         DayNightController.Instance.OnDawn += OnDawn;
         DayNightController.Instance.OnSunrise += OnSunrise;
+        Inventory.OnItemAdded += OnItemAdded;
 	}
 
     void OnDestroy() {
@@ -118,6 +122,23 @@ public class PlayerController : Singleton<PlayerController>
             Thirst = 0;
  
         HUD.Instance.UpdateStats(this);
+    }
+    
+    void OnItemAdded(string item)
+    {
+        /*
+        if (item == "Compass") {
+            UI.Instance.SetSubtitle("A compass...");
+            HasCompass = true;
+        }*/
+        if (item == "Map") {
+            UI.Instance.SetSubtitle("A map!  This will help...");
+            HasMap = true;
+        }
+        if (item == "Oar") {
+            UI.Instance.SetSubtitle("Oars...  I can move a bit quicker with these");
+            HasOar = true;
+        }
     }
 
     #region State Management

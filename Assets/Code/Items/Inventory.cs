@@ -11,6 +11,8 @@ public class Inventory : MonoBehaviour
 	//public GameObject inventoryPanel;
 	[SerializeField] private static int maxCapacity = 25;
 	[SerializeField] private static int currentCapacity = 0;
+
+    public static event Action<string> OnItemAdded;
 	
 	void Start()
 	{
@@ -32,12 +34,15 @@ public class Inventory : MonoBehaviour
 
 		if(Items.Count >= 12)
 		{
-			Debug.Log("If only I had more space...");
+			UI.Instance.SetSubtitle("If only I had more space...");
 			return;
 		}
 
 		Items.Add(item, 1);
 		Debug.Log("Adding new " + item.Name + ". Total of " + Items[item]);
+
+        if (OnItemAdded != null)
+            OnItemAdded(item.Name);
 	}
 	
 	public static void RemoveItem(InventoryItem item)
@@ -46,8 +51,15 @@ public class Inventory : MonoBehaviour
 		{
 			switch(item.Name)
 			{
+                // These items don't get consumed
+                case "Compass":
+                case "Map":
+                case "Oar":
+                    return;
+
 				case "Food" : PlayerController.Instance.EatFood(); break;
 				case "Water" : PlayerController.Instance.DrinkWater(); break;
+
 				default : Debug.Log("What to do with this...."); break;
 			}
 			Items.Remove(item);

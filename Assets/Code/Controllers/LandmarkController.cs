@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class LandmarkController : Singleton<LandmarkController> {
 
     private float _kShippingLaneDistMin = 10.0f;
-    private float _kShippingLaneDistMax = 50.0f;
+    private float _kShippingLaneDistMax = 150.0f;
     private float _kShowShippingLane = 8.0f;
     private float _kIslandDistMin = 10.0f;
-    private float _kIslandDistMax = 50.0f;
+    private float _kIslandDistMax = 150.0f;
     private float _kShowIsland = 8.0f;
 
     [SerializeField] private GameObject _shippingLaneObj;
