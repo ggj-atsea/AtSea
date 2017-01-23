@@ -10,7 +10,7 @@ public class TouchInput : MonoBehaviour {
 	void Update () 
     {
 
-#if UNITY_EDITOR
+#if !UNITY_IOS && !UNITY_ANDROID
         if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
         {
             touchesOld = new GameObject[touchList.Count];
