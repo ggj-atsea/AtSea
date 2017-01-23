@@ -29,8 +29,8 @@ public class LandmarkController : Singleton<LandmarkController> {
 
     public void Start() {
         _raft = new Vector2(0.0f, 0.0f);
-        _shippingLane = Random.insideUnitCircle.normalized * Random.Range(_kShippingLaneDistMin, _kShippingLaneDistMax);
-        _island = Random.insideUnitCircle.normalized * Random.Range(_kIslandDistMin, _kIslandDistMax);
+        _shippingLane = Random.insideUnitCircle.normalized * Random.Range(_kShippingLaneDistMin + 10, _kShippingLaneDistMax);
+        _island = Random.insideUnitCircle.normalized * Random.Range(_kIslandDistMin + 10, _kIslandDistMax);
         _north = new Vector2(100.0f, 0.0f);
 
         DayNightController.Instance.OnDawn += OnDawn;
@@ -102,6 +102,13 @@ public class LandmarkController : Singleton<LandmarkController> {
         Vector2 pos = _island.normalized * 10;
         _islandObj.SetActive(show);
         _islandObj.transform.position = new Vector3(pos.x, 0, pos.y);
+    }
+
+    public bool NearShip() {
+        return _shippingLaneObj.activeInHierarchy;
+    }
+    public bool NearIsland() {
+        return _islandObj.activeInHierarchy;
     }
 }
 

@@ -81,12 +81,25 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnSunrise(int day) {
-        if (Hunger >= HungerMax / 2) {
-            UI.Instance.SetSubtitle("I'm starving...");
+        string sub = null;
+
+        if (LandmarkController.Instance.NearShip())
+        {
+            sub = "A ship!  I hope they're friendly...";
+        }
+        else if (LandmarkController.Instance.NearIsland())
+        {
+            sub = "An island!  I'm saved!";
+        }
+        else if (Hunger >= HungerMax / 2) {
+            sub = "I'm starving...";
         }
         else if (Thirst >= ThirstMax / 2) {
-            UI.Instance.SetSubtitle("I'm thirsty...");
+            sub = "I'm thirsty...";
         }
+
+        if (sub != null)
+            UI.Instance.SetSubtitle(sub);
     }
 
     public void EatFood()

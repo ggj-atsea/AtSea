@@ -27,7 +27,6 @@ public class TouchInput : MonoBehaviour {
             {
                 GameObject recipient = hit.transform.gameObject;
                 touchList.Add(recipient);
-                Debug.Log("Hello from !" + recipient.name);
 
                 if (Input.GetMouseButtonDown(0))
                 {
