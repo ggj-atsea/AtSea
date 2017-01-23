@@ -41,7 +41,10 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnDusk(int day) {
-        In(2.0f, () => SetState("asleep"));
+        In(2.0f, () => {
+            SetState("sleeping");
+            BoatController.Instance.ShowCanopy();
+           });
     }
 
     void OnMidnight(int day) {
@@ -70,7 +73,10 @@ public class PlayerController : Singleton<PlayerController>
 
             HUD.Instance.UpdateStats(this);
 
-            In(1.0f, () => SetState("standing"));
+            In(1.0f, () => {
+               SetState("standing");
+               BoatController.Instance.HideCanopy();
+            });
         }
     }
 
