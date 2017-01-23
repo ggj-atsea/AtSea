@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,14 +18,12 @@ public class RandomDebrisController : MonoBehaviour {
 	public void OnDawn(int day)
 	{
 		foreach(var container in floatingContainers)
-		{
-			container.parent = _sea;
-			container.gameObject.SetActive(true);
+		{	
+			var random = Random.Range (0, 6);
+			if (random == 3) {
+				container.parent = _sea;
+				container.gameObject.SetActive (true);
+			}
 		}
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }
