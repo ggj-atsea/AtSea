@@ -112,7 +112,6 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 			Debug.Log ("Adding " + item.Value.Name + " to container. At index " + item.Key);
 		}
 
-        TODO InventoryView is NULL???
 		InventoryView.Instance.PopulatePackageContents();
 		InventoryView.Instance.ShowPackageInventory();
 
