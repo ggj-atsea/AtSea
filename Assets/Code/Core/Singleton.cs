@@ -17,7 +17,7 @@ public abstract class Singleton<T> : Behavior where T : Singleton<T>
         }
     }
 	
-	public void Start() {
+	void Awake() {
         _inst = (T)this;
 	}
 }

@@ -14,8 +14,20 @@ public class DayNightController : Singleton<DayNightController>
     [SerializeField] private GameObject _backgroundWater;
     [SerializeField] private Light _light;
 
-    [SerializeField] private Color _dayColor;
     [SerializeField] private Color _nightColor;
+    [SerializeField] private Color _dayColor;
+    [SerializeField] private Color _stormColor;
+    [SerializeField] private Color _rainColor;
+    [SerializeField] private float _brightnessNight;
+    [SerializeField] private float _brightnessDay;
+    [SerializeField] private float _brightnessStorm;
+    [SerializeField] private float _brightnessLightning;
+    [SerializeField] private float _brightnessRain;
+    [SerializeField] private float _stormLightVariance;
+    [SerializeField] private float _rainLightVariance;
+
+    [SerializeField] private float _lightningStart;
+    [SerializeField] private float _lightningEnd;
 
     public event Action<int> OnDawn;
     public event Action<int> OnSunrise;
@@ -23,33 +35,102 @@ public class DayNightController : Singleton<DayNightController>
     public event Action<int> OnDusk;
     public event Action<int> OnMidnight;
 
+    public bool IsRaining { get; set; }
+    public bool IsStorm { get; set; }
+
     private float _lastTime = -1.0f;
+    private float _noiseSeed = 0.0f;
+
+    private float lightning;
+
+    void Start() {
+        // Initial day is always a storm
+        IsStorm = true;
+    }
+
+    // Update weather, etc at end of day
+    void AdvanceDay() {
+        float roll = UnityEngine.Random.Range(0.0f,1.0f);
+
+        if (IsStorm) {
+            // Chance of rain after a storm
+            if (roll < 0.4f) {
+                IsRaining = true;
+            }
+            IsStorm = false;
+        }
+
+        else if (IsRaining) {
+            // Go back to sunshine after rain
+            IsRaining = false;
+        }
+
+        else {
+            // Small chance of storm
+            if (roll < 0.15f) {
+                IsStorm = true;
+            }
+            // And small chance of rain
+            else if (roll < 0.3f) {
+                IsRaining = true;
+            }
+        }
+
+        // Randomize the noise factor each day
+        _noiseSeed = UnityEngine.Random.Range(0.0f,10.0f);
+    }
 
 	// Update is called once per frame
 	void Update() {
         var time = Clock.Instance.Hour;
         var day = Clock.Instance.Day;
 
+        Color dayColor = (IsStorm ? _stormColor :
+                         (IsRaining ? _rainColor : _dayColor));
+
+        float maxBrightness = (IsStorm ? _brightnessStorm :
+                               IsRaining ? _brightnessRain : _brightnessDay);
+
+        if (IsStorm)
+        {
+            lightning += Time.deltaTime;
+            if (lightning > _lightningStart) {
+                maxBrightness = maxBrightness + _brightnessLightning * (1.0f - (lightning - _lightningStart) / (_lightningEnd - _lightningStart));
+
+                if (lightning > _lightningEnd) {
+                    float roll = UnityEngine.Random.Range(0.0f,1.0f);
+                    if (roll < 0.55f) {
+                        lightning = UnityEngine.Random.Range(0,1.5f);
+                    }
+                    else {
+                        lightning = UnityEngine.Random.Range(0.97f, 1.1f) * _lightningStart;
+                    }
+                }
+            }
+        }
+
         // Set color and intensity based on sunrise/sunset
         if (time < _sunriseStart) {
             SetEnvironment(_nightColor, _nightColor, 0.0f);
             SetLightIntensity(0.0f, 0.0f, 0.0f);
 
-            if (_lastTime > time && OnMidnight != null)
+            if (_lastTime > time && OnMidnight != null) {
+                AdvanceDay();
                 OnMidnight(day);
+            }
         }
         else if (time < _sunriseEnd) {
             float percent = (time - _sunriseStart) / (_sunriseEnd - _sunriseStart);
-            SetEnvironment(_nightColor, _dayColor, percent);
-            SetLightIntensity(0.0f, 1.0f, percent);
+            SetEnvironment(_nightColor, dayColor, percent);
+            SetLightIntensity(0.0f, maxBrightness, percent);
 
             if (_lastTime < _sunriseStart && OnDawn != null) {
                 OnDawn(day);
             }
         }
         else if (time < _sunsetStart) {
-            SetEnvironment(_dayColor, _dayColor, 0.0f);
-            SetLightIntensity(1.0f, 1.0f, 0.0f);
+            SetEnvironment(dayColor, dayColor, 0.0f);
+            SetLightIntensity(maxBrightness, maxBrightness, 0.0f);
 
             if (_lastTime < _sunriseEnd && OnSunrise != null) {
                 OnSunrise(day);
@@ -57,8 +138,8 @@ public class DayNightController : Singleton<DayNightController>
         }
         else if (time < _sunsetEnd) {
             float percent = (time - _sunsetStart) / (_sunsetEnd - _sunsetStart);
-            SetEnvironment(_dayColor, _nightColor, percent);
-            SetLightIntensity(1.0f, 0.0f, percent);
+            SetEnvironment(dayColor, _nightColor, percent);
+            SetLightIntensity(maxBrightness, 0.0f, percent);
 
             if (_lastTime < _sunsetStart && OnSunset != null) {
                 OnSunset(day);
@@ -94,7 +175,23 @@ public class DayNightController : Singleton<DayNightController>
     }
 
     private void SetLightIntensity(float start, float end, float percent) {
-        _light.intensity = (start + (end - start) * percent);
+        _light.intensity = (start + (end - start) * percent) * LightVariance;
+    }
+
+    private float LightVariance {
+        get {
+            if (IsStorm) {
+                float perlin = Mathf.PerlinNoise(4 * Clock.Instance.Hour, _noiseSeed);
+                return 1.0f + (1.0f - perlin * 2.0f) * _stormLightVariance;
+            }
+            if (IsRaining) {
+                float perlin = Mathf.PerlinNoise(2 * Clock.Instance.Hour, _noiseSeed);
+                return 1.0f + (1.0f - perlin * 2.0f) * _rainLightVariance;
+            }
+            else {
+                return 1.0f;
+            }
+        }
     }
 
     // Math helpers

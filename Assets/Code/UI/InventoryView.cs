@@ -19,7 +19,6 @@ public class InventoryView : Singleton<InventoryView> {
 
 	void Start()
 	{
-		base.Start ();
 		gameObject.SetActive (false);
 	}
 

@@ -7,7 +7,6 @@ public class WaveController : MonoBehaviour
 	private Cloth _cloth;
 	private float TurbulenceMin = 0f;
 	private float TurbulenceMax = 20f;
-	[SerializeField] private float CapsizeSpeed = 10f;
 	private Transform _boat;
 	private Transform _player;
 
@@ -40,7 +39,7 @@ public class WaveController : MonoBehaviour
 			_cloth.randomAcceleration.x + _cloth.randomAcceleration.y + _cloth.randomAcceleration.z
 		);
         
-		if(largestAcceleration > 30)
+		if(largestAcceleration > 30 && Clock.Instance.Day > 1)
 		{
 			Capsize();
 			DetachPlayer();
@@ -103,32 +102,16 @@ public class WaveController : MonoBehaviour
 
 	public void Turbulence()
 	{
-		var turbulenceFactor = Random.Range(0, 4);
-
-		switch(turbulenceFactor)
-		{
-			case 0: 
-				_cloth.externalAcceleration = new Vector3(
-					Random.Range(TurbulenceMin, TurbulenceMax), 
-					Random.Range(TurbulenceMin, TurbulenceMax), 
-					Random.Range(TurbulenceMin, TurbulenceMax));
-				break;
-			case 1:
-				_cloth.randomAcceleration = new Vector3(
-					Random.Range(TurbulenceMin, TurbulenceMax), 
-					Random.Range(TurbulenceMin, TurbulenceMax), 
-					Random.Range(TurbulenceMin, TurbulenceMax));
-				break;
-			case 2:
-				_cloth.worldAccelerationScale = Random.Range(0f, 1f);
-				break;
-			case 3: 
-				CalmWaves();
-				break;
-			default:
-				CalmWaves();
-				break;
-		}
+        if (DayNightController.Instance.IsStorm) {
+			_cloth.externalAcceleration = new Vector3(
+				Random.Range(TurbulenceMin, TurbulenceMax), 
+				Random.Range(TurbulenceMin, TurbulenceMax), 
+				Random.Range(TurbulenceMin, TurbulenceMax));
+            _cloth.worldAccelerationScale = Random.Range(0f, 1f);
+        }
+        else {
+            CalmWaves();
+        }
 	}
 
 	public void CalmWaves()
@@ -138,3 +121,33 @@ public class WaveController : MonoBehaviour
 				_cloth.externalAcceleration = new Vector3(0f, 0f, 0f);
 	}
 }
+
+/*
+TODO
+
+lightning flashes
+
+spawning by day
+
+using equipped items
+
+need a glow behind card
+
+camera:  zoom out during day, in at night
+
+adding extra item spawns
+    - only if you don't have it
+
+durability
+    - breaking items
+    - once that's implemented, spawning duplicates is ok
+
+crafting
+    - combine line + parachute for sail
+    - line + stick for pole
+
+hook up animations
+
+rain effect
+*/
+

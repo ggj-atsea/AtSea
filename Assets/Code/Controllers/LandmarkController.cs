@@ -17,7 +17,7 @@ public class LandmarkController : Singleton<LandmarkController> {
     private Vector2 _raft;
     private Vector2 _shippingLane;
     private Vector2 _island;
-    private Vector2 _north;
+//    private Vector2 _north;
 
     float _rotation = 0.0f;
 
@@ -27,11 +27,11 @@ public class LandmarkController : Singleton<LandmarkController> {
         }
     }
 
-    public void Start() {
+    void Start() {
         _raft = new Vector2(0.0f, 0.0f);
         _shippingLane = Random.insideUnitCircle.normalized * Random.Range(_kShippingLaneDistMin + 10, _kShippingLaneDistMax);
         _island = Random.insideUnitCircle.normalized * Random.Range(_kIslandDistMin + 10, _kIslandDistMax);
-        _north = new Vector2(100.0f, 0.0f);
+//        _north = new Vector2(100.0f, 0.0f);
 
         DayNightController.Instance.OnDawn += OnDawn;
     }

@@ -43,4 +43,14 @@ public class InventoryItem : IInteractable
     public void OnTouchUp(Vector2 point)
     {
     }
+
+    public bool IsEquippable() {
+        return (Name == "Sail" ||
+                Name == "Oars" ||
+                Name == "Pole" ||
+                Name == "Knife" ||
+                Name == "Bucket" ||
+                Name == "Net"
+        );
+    }
 }

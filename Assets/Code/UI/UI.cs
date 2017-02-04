@@ -19,6 +19,11 @@ public class UI : Singleton<UI> {
     public InventoryView Inventory { get { return _inventory; } }
     public CompassView Compass { get { return _compass; } }
 
+    void Start()
+    {
+        _splash.SetActive(true);
+    }
+
     public void SetSubtitle(string message) {
         _subtitle.SetText(message, 3.0f, 1.0f);
     }

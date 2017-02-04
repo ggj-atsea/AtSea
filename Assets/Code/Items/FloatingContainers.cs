@@ -62,7 +62,24 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		var numberOfItemsInContainer = Random.Range(1, MaxContainerItems);
         for(int i = 0; i < numberOfItemsInContainer; i++)
         {
-            var item = Random.Range(0, 2) == 0 ? "Food" : "Water";
+            string item;
+            var roll = Random.Range(0, 10);
+            switch (roll) {
+            case 0:     item = "Bucket";    break;
+            case 1:     item = "Net";       break;
+            case 2:     item = "Oars";      break;
+            case 3:     item = "Sail";      break;
+            case 4:     item = "Knife";     break;
+            case 5:     item = "Pole";      break;
+            case 6:
+            case 7:
+            case 8:     item = "Water";     break;
+            case 9:
+            case 10:
+            default:    item = "Food";      break;
+            }
+
+            //var item = Random.Range(0, 2) == 0 ? "Food" : "Water";
             _insideContainer.Add(i, new InventoryItem(item));
         }
 
@@ -95,6 +112,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 			Debug.Log ("Adding " + item.Value.Name + " to container. At index " + item.Key);
 		}
 
+        TODO InventoryView is NULL???
 		InventoryView.Instance.PopulatePackageContents();
 		InventoryView.Instance.ShowPackageInventory();
 

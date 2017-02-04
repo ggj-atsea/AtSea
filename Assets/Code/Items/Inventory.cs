@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Inventory : MonoBehaviour
+public class Inventory : Singleton<Inventory>
 {
 	public static Dictionary<InventoryItem, int> Items;
 	public static Dictionary<int, InventoryItem> ContainerItems;
-	//public GameObject inventoryPanel;
-	[SerializeField] private static int maxCapacity = 25;
-	[SerializeField] private static int currentCapacity = 0;
 
     public static event Action<string> OnItemAdded;
+	public static event Action<string> OnItemRemoved;
 	
 	void Start()
 	{
@@ -47,27 +45,26 @@ public class Inventory : MonoBehaviour
 	
 	public static void RemoveItem(InventoryItem item)
 	{
-		//if(Items[item] <= 1)
+		switch(item.Name)
 		{
-			switch(item.Name)
-			{
-                // These items don't get consumed
-                case "Compass":
-                case "Map":
-                case "Oar":
-                    return;
+            // These items don't get consumed
+            case "Compass":
+            case "Map":
+            case "Oar":
+			case "Sail":
+			case "Knife":
+                return;
 
-				case "Food" : PlayerController.Instance.EatFood(); break;
-				case "Water" : PlayerController.Instance.DrinkWater(); break;
+			case "Food" : PlayerController.Instance.EatFood(); break;
+			case "Water" : PlayerController.Instance.DrinkWater(); break;
 
-				default : Debug.Log("What to do with this...."); break;
-			}
-			Items.Remove(item);
-			Debug.Log("Consumed the last " + item.Name);
-			return;
+			default : Debug.Log("What to do with this...."); break;
 		}
-		Items[item] -= 1;
-		Debug.Log("Consumed 1 " + item.Name + ". " + Items[item] + " remaining.");
+		Items.Remove(item);
+		Debug.Log("Consumed 1 " + item.Name);
+
+		if (OnItemRemoved != null)
+			OnItemRemoved(item.Name);
 	}
 
 	public static void AddContainerItem(InventoryItem item, int index)
@@ -107,4 +104,18 @@ public class Inventory : MonoBehaviour
     // public void OnTouchExit()
     // {
     // }
+
+    public List<InventoryItem> GetEquippedItems() {
+        var result = new List<InventoryItem>();
+
+        foreach (var kvp in Items) {
+            var item = kvp.Key;
+
+            if (item.IsEquippable()) {
+                result.Add(item);
+            }
+        }
+
+        return result;
+    }
 }
