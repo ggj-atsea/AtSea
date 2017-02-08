@@ -43,7 +43,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
         {
             _insideContainer = new Dictionary<int, InventoryItem>();
         }
-        
+        _insideContainer = new Dictionary<int, InventoryItem>();
         GenerateContainerItems();
         
 		DayNightController.Instance.OnDusk += OnDusk;
@@ -80,7 +80,13 @@ public class FloatingContainers : MonoBehaviour, IInteractable
             }
 
             //var item = Random.Range(0, 2) == 0 ? "Food" : "Water";
-            _insideContainer.Add(i, new InventoryItem(item));
+			try{
+				_insideContainer.Add(i, new InventoryItem(item));
+			}
+			catch(System.Exception ex){
+				Debug.Log("Exception hit generating items and adding to dictionary. Item: " + item + " i: " + i + " " + ex.Message);
+			}
+            
         }
 
     }
