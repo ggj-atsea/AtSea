@@ -6,10 +6,13 @@ public class BoatController : Singleton<BoatController>, IInteractable
     private bool _startSwimmingToBoat = false;
     private Vector3 _motion;
     private float _decay;
+    private float _velocity;
 
     [SerializeField] private GameObject _trail;
     [SerializeField] private GameObject _canopy;
     [SerializeField] private GameObject _light;
+    [SerializeField] private ParticleSystem _trailSys;
+    [SerializeField] private ParticleSystem _splashSys;
 
     public Vector3 Velocity {
         get { return _motion; }
@@ -51,6 +54,7 @@ public class BoatController : Singleton<BoatController>, IInteractable
 
     public void MoveTowards(Vector2 point, float velocity, float decay)
     {
+        _velocity = velocity;
         _decay = decay;
         _motion = new Vector3(point.x - Screen.width / 2, 0, point.y - Screen.height / 2).normalized * velocity;
         Debug.Log("Moving to " + point+ " with velocity " + velocity + " and decay " + decay);
@@ -63,11 +67,14 @@ public class BoatController : Singleton<BoatController>, IInteractable
             SwimToBoat();
         }
 
-        if (_motion.magnitude > 0.001f) {
+        if (_motion.magnitude > 0.1f) {
             _motion *= 1.0f - (_decay * Time.deltaTime);
 
             transform.position += _motion * Time.deltaTime;
 
+            float rate = (_motion.magnitude / _velocity);
+            if (rate > 1.0f)
+                rate = 1.0f;
 
             float angle = Vector3.Angle(_motion, new Vector3(0,0,1));
 
@@ -76,6 +83,15 @@ public class BoatController : Singleton<BoatController>, IInteractable
 
             _trail.SetActive(true);
             _trail.transform.localEulerAngles = new Vector3(0,0,angle);
+
+            var em = _trailSys.emission.rateOverTime;
+            em.mode = ParticleSystemCurveMode.Constant;
+            em.constantMin = 2.0f * rate;
+            em.constantMax = 2.0f * rate;
+            em = _splashSys.emission.rateOverTime;
+            em.mode = ParticleSystemCurveMode.Constant;
+            em.constantMin = 8.0f * rate;
+            em.constantMax = 8.0f * rate;
         }
         else {
             _trail.SetActive(false);

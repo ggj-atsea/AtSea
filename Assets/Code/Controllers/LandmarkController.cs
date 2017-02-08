@@ -60,7 +60,6 @@ public class LandmarkController : Singleton<LandmarkController> {
         if (_rotation < -180.0f) {
             _rotation += 360.0f;
         }
-        _rotation = 0.0f;
 
         UI.Instance.Compass.UpdateLandmarks(this);
 

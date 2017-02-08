@@ -61,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
         }
 
 		if (transform.parent.name != "Boat") {
-			GameController.Instance.LoseGame ("died from drowning");
+			GameController.Instance.LoseGame ("drowned");
 		}
 
         Hunger += 1.0f;

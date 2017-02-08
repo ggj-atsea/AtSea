@@ -61,26 +61,37 @@ public class FloatingContainers : MonoBehaviour, IInteractable
     {
         _insideContainer = new Dictionary<int, InventoryItem>();
 
-		var numberOfItemsInContainer = Random.Range(1, MaxContainerItems);
-        for(int i = 0; i < numberOfItemsInContainer; i++)
+        int minItems = 1;
+        if (Clock.Instance.Day == 1) {
+            _insideContainer.Add(0, new InventoryItem("Oars"));
+            minItems = 4;
+        }
+
+		var numberOfItemsInContainer = Random.Range(minItems, MaxContainerItems);
+
+        // 1 in 8 crates will have 1 special item in it
+        int specialItem = -1;
+        if (Clock.Instance.Day > 1 && Random.Range(0,8) == 0)
+            specialItem = Random.Range(0, numberOfItemsInContainer);
+
+        for(int i = _insideContainer.Count; i < numberOfItemsInContainer; i++)
         {
             string item;
-            var roll = Random.Range(0, 10);
-            switch (roll) {
-            //case 0:     item = "Bucket";    break;
-            //case 1:     item = "Net";       break;
-            case 2:     item = "Oars";      break;
-            case 3:     item = "Sail";      break;
-            case 4:     item = "Knife";     break;
-            case 5:     item = "Pole";      break;
-            case 0:
-            case 6:
-            case 7:
-            case 8:     item = "Water";     break;
-            case 1:
-            case 9:
-            case 10:
-            default:    item = "Food";      break;
+
+            if (specialItem == i) {
+                int roll = Random.Range(0,5);
+                switch (roll) {
+                    default:
+                    case 0:     item = "Bucket";    break;
+                    case 1:     item = "Net";       break;
+                    case 2:     item = "Sail";      break;
+                    case 3:     item = "Knife";     break;
+                    case 4:     item = "Pole";      break;
+                    //case 2:     item = "Oars";      break;
+                }
+            }
+            else {
+                item = (Random.Range(0,2) == 0) ? "Food" : "Water";
             }
 
             //var item = Random.Range(0, 2) == 0 ? "Food" : "Water";
