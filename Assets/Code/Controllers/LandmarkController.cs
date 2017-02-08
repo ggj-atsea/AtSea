@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class LandmarkController : Singleton<LandmarkController> {
 
     private float _kShippingLaneDistMin = 20.0f;
-    private float _kShippingLaneDistMax = 150.0f;
+    private float _kShippingLaneDistMax = 100.0f;
     private float _kShowShippingLane = 8.0f;
     private float _kIslandDistMin = 20.0f;
-    private float _kIslandDistMax = 150.0f;
+    private float _kIslandDistMax = 100.0f;
     private float _kShowIsland = 8.0f;
 
     [SerializeField] private GameObject _shippingLaneObj;
@@ -78,6 +78,10 @@ public class LandmarkController : Singleton<LandmarkController> {
         return 1.0f - (_shippingLane.magnitude - _kShippingLaneDistMin) / (_kShippingLaneDistMax - _kShippingLaneDistMin);
     }
 
+    public float BoatDist() {
+        return _shippingLane.magnitude;
+    }
+
     public Vector2 IslandPos() {
         var result = _island.normalized;
         if (_island.magnitude < _kIslandDistMin)
@@ -87,6 +91,10 @@ public class LandmarkController : Singleton<LandmarkController> {
 
     public float IslandFade() {
         return 1.0f - (_island.magnitude - _kIslandDistMin) / (_kIslandDistMax - _kIslandDistMin);
+    }
+
+    public float IslandDist() {
+        return _island.magnitude;
     }
 
     private void ShowShippingLane(bool show)

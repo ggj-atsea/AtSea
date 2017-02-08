@@ -26,6 +26,9 @@ public class EquipmentView : Singleton<EquipmentView> {
         }
 
         var equipment = Inventory.Instance.GetEquippedItems();
+        if (equipment.Count > 0)
+            gameObject.SetActive (true);
+
         for (int i = 0; i < equipment.Count; ++i) {
             var item = equipment[i];
             var card = Instantiate(_card, _items.transform, false);

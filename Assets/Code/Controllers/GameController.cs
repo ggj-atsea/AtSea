@@ -39,7 +39,7 @@ public class GameController : Singleton<GameController>
 
     public void ShowEnding() {
         UI.Instance.GameOver(_message);
-        In(15.0f, () => Restart());
+        In(5.0f, () => Restart());
     }
 
     public void StartClock() {
