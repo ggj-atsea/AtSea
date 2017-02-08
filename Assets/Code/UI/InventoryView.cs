@@ -15,11 +15,32 @@ public class InventoryView : Singleton<InventoryView> {
     [SerializeField] private Sprite _food;
     [SerializeField] private Sprite _water;
 
+     private Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
+
+     Sprite GetSprite(string name)
+     {
+         var spriteName = name + "Icon";
+         Debug.Log("Looking for icon " + spriteName);
+
+         if (_sprites.ContainsKey(spriteName))
+             return _sprites[spriteName];
+         else
+             return null;
+     }
+
     // Populate UI
 
 	void Start()
 	{
+        var sprites = Resources.LoadAll<Sprite>("icons");
+        var names = new string[sprites.Length];
+        foreach (var sprite in sprites) {
+            Debug.Log("Loading sprite " + sprite.name);
+            _sprites[sprite.name] = sprite;
+        }
+
 		gameObject.SetActive (false);
+
 	}
 
     private void PopulatePlayerContents() {
@@ -31,9 +52,10 @@ public class InventoryView : Singleton<InventoryView> {
         }
 
         foreach (var item in items) {
+            var sprite = GetSprite(item.Key.Name);
+
             var card = Instantiate(_card, _playerContents.transform, false);
-            var image = string.Equals(item.Key.Name, "Food") ? _food : _water;
-            card.transform.GetChild(0).GetComponent<Image>().sprite = image;
+            card.transform.GetChild(0).GetComponent<Image>().sprite = sprite;
             card.GetComponent<Button>().onClick.AddListener(() => {
                 Inventory.RemoveItem(item.Key);
                 ShowPlayerInventory();
@@ -45,10 +67,11 @@ public class InventoryView : Singleton<InventoryView> {
     public void PopulatePackageContents() {
 		foreach(var item in Inventory.ContainerItems)
 		{
+            var sprite = GetSprite(item.Value.Name);
+
             var card = Instantiate(_card, _packageContents.transform, false);
-			var image = string.Equals (item.Value.Name, "Food") ? _food : _water;
 			Debug.Log ("Child 3 : " + card.transform.GetChild (0).name);
-			card.transform.GetChild (0).GetComponent<Image>().sprite = image;
+			card.transform.GetChild (0).GetComponent<Image>().sprite = sprite;
 			card.GetComponent<Button> ().onClick.AddListener (() => {
 				Inventory.RemoveContainerItem(item.Key);
 				ShowPackageInventory();

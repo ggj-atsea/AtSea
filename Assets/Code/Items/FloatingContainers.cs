@@ -18,10 +18,10 @@ public class FloatingContainers : MonoBehaviour, IInteractable
     [SerializeField] private Dictionary<int, InventoryItem> _insideContainer;
     
     private const int MaxContainerItems = 6;
-	private const float ContainerMaxX = 15.0f;
-	private const float ContainerMinX = -15.0f;
-	private const float ContainerMinZ = 16.0f;
-	private const float ContainerMaxZ = 25.0f;
+	private const float ContainerMaxX = 12.0f;
+	private const float ContainerMinX = -12.0f;
+	private const float ContainerMinZ = 10.0f;
+	private const float ContainerMaxZ = 18.0f;
 	private const float ContainerResetPoint = -5.0f;
 	private const float MinSpeed = -0.5f;
 	private const float MaxSpeed = -3f;
@@ -59,21 +59,25 @@ public class FloatingContainers : MonoBehaviour, IInteractable
     
     public void GenerateContainerItems()
     {
+        _insideContainer = new Dictionary<int, InventoryItem>();
+
 		var numberOfItemsInContainer = Random.Range(1, MaxContainerItems);
         for(int i = 0; i < numberOfItemsInContainer; i++)
         {
             string item;
             var roll = Random.Range(0, 10);
             switch (roll) {
-            case 0:     item = "Bucket";    break;
-            case 1:     item = "Net";       break;
+            //case 0:     item = "Bucket";    break;
+            //case 1:     item = "Net";       break;
             case 2:     item = "Oars";      break;
             case 3:     item = "Sail";      break;
             case 4:     item = "Knife";     break;
             case 5:     item = "Pole";      break;
+            case 0:
             case 6:
             case 7:
             case 8:     item = "Water";     break;
+            case 1:
             case 9:
             case 10:
             default:    item = "Food";      break;

@@ -22,6 +22,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public bool HasMap { get; private set; }
     public bool HasOar { get; private set; }
+    public bool HasSail { get; private set; }
 
 	// Use this for initialization
 	void Start() {
@@ -110,6 +111,19 @@ public class PlayerController : Singleton<PlayerController>
             UI.Instance.SetSubtitle(sub);
     }
 
+    public void MoveTowards(Vector2 point)
+    {
+        SetState("rowing");
+        if (HasSail)
+        {
+            BoatController.Instance.MoveTowards(point, 1.0f, 0.2f);
+        }
+        else
+        {
+            BoatController.Instance.MoveTowards(point, 0.5f, 0.3f);
+        }
+    }
+
     public void EatFood()
     {
         Hunger -= 5.0f;
@@ -139,9 +153,12 @@ public class PlayerController : Singleton<PlayerController>
             UI.Instance.SetSubtitle("A map!  This will help...");
             HasMap = true;
         }
-        if (item == "Oar") {
+        if (item == "Oars") {
             UI.Instance.SetSubtitle("Oars...  I can move a bit quicker with these");
             HasOar = true;
+        }
+        if (item == "Sail") {
+            HasSail = true;
         }
     }
 

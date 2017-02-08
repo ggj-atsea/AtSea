@@ -4,12 +4,16 @@ using UnityEngine;
 public class BoatController : Singleton<BoatController>, IInteractable
 {
     private bool _startSwimmingToBoat = false;
-    private float _velocity = 1.0f;
     private Vector3 _motion;
+    private float _decay;
 
     [SerializeField] private GameObject _trail;
     [SerializeField] private GameObject _canopy;
     [SerializeField] private GameObject _light;
+
+    public Vector3 Velocity {
+        get { return _motion; }
+    }
 
     void Start()
     {
@@ -45,9 +49,11 @@ public class BoatController : Singleton<BoatController>, IInteractable
     {
     }
 
-    public void MoveTowards(Vector2 point)
+    public void MoveTowards(Vector2 point, float velocity, float decay)
     {
-        _motion = new Vector3(point.x - Screen.width / 2, 0, point.y - Screen.height / 2).normalized * _velocity;
+        _decay = decay;
+        _motion = new Vector3(point.x - Screen.width / 2, 0, point.y - Screen.height / 2).normalized * velocity;
+        Debug.Log("Moving to " + point+ " with velocity " + velocity + " and decay " + decay);
     }
 
     void Update()
@@ -57,7 +63,9 @@ public class BoatController : Singleton<BoatController>, IInteractable
             SwimToBoat();
         }
 
-        if (_motion.magnitude > 0.1f) {
+        if (_motion.magnitude > 0.001f) {
+            _motion *= 1.0f - (_decay * Time.deltaTime);
+
             transform.position += _motion * Time.deltaTime;
 
 
