@@ -21,7 +21,7 @@ public class EquipmentView : Singleton<EquipmentView> {
 	}
 
     private void Refresh() {
-        foreach (GameObject c in _items.transform) {
+        foreach (Transform c in _items.transform) {
             Destroy(c);
         }
 
