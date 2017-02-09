@@ -60,7 +60,23 @@ public class Inventory : Singleton<Inventory>
 
 			default : Debug.Log("What to do with this...."); break;
 		}
-		Items.Remove(item);
+
+		try
+		{
+			if(Items[item] <= 1)
+			{
+				Items.Remove(item);	
+			}
+			else{
+				Items[item] -= 1;
+			}
+		}
+		catch (System.Exception ex)
+		{
+			Debug.Log("Exception hit removing item in Inventory.cs. " + ex);
+			throw;
+		}
+		
 		Debug.Log("Consumed 1 " + item.Name);
 
 		if (OnItemRemoved != null)
