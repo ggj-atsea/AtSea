@@ -33,7 +33,6 @@ public class InventoryView : Singleton<InventoryView> {
 	void Start()
 	{
         var sprites = Resources.LoadAll<Sprite>("icons");
-        var names = new string[sprites.Length];
         foreach (var sprite in sprites) {
             Debug.Log("Loading sprite " + sprite.name);
             _sprites[sprite.name] = sprite;
@@ -72,6 +71,7 @@ public class InventoryView : Singleton<InventoryView> {
             var card = Instantiate(_card, _playerContents.transform, false);
             card.transform.GetChild(0).GetComponent<Image>().sprite = sprite;
             card.GetComponent<Button>().onClick.AddListener(() => {
+                UI.Handled = true;
                 Inventory.RemoveItem(item.Key);
                 ShowPlayerInventory();
             });
@@ -88,6 +88,7 @@ public class InventoryView : Singleton<InventoryView> {
 			Debug.Log ("Child 3 : " + card.transform.GetChild (0).name);
 			card.transform.GetChild (0).GetComponent<Image>().sprite = sprite;
 			card.GetComponent<Button> ().onClick.AddListener (() => {
+                UI.Handled = true;
 				Inventory.RemoveContainerItem(item.Key);
 				ShowPackageInventory();
 			});
@@ -125,6 +126,7 @@ public class InventoryView : Singleton<InventoryView> {
 
     public void Close()
     {
+        UI.Handled = true;
         gameObject.SetActive(false);
     }
 }

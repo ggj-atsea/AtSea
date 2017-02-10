@@ -12,6 +12,8 @@ public class Clock : Singleton<Clock>
     public float Hour { get { return _hour; } }
     public int Day { get { return _day; } }
 
+    public static int DayCounter;
+
 	void Start() {
         _hour = 4.0f;
         _day = 0;
@@ -21,10 +23,17 @@ public class Clock : Singleton<Clock>
     {
         if (GameController.Instance.GameStarted)
         {
+            if (_hour > 16 && PlayerController.Instance.NeedsOars)
+            {
+                return;
+            }
+
             _hour += (UnityEngine.Time.deltaTime * 24) / _secondsInDay;
             if (_hour > 24.0f && GameController.Instance.GameOver == false) {
                 _hour -= 24.0f;
                 ++_day;
+
+                DayCounter = _day;
             }
         }
 	}

@@ -83,6 +83,11 @@ public class Inventory : Singleton<Inventory>
 			OnItemRemoved(item.Name);
 	}
 
+    public static void ClearContainer()
+    {
+        ContainerItems.Clear();
+    }
+
 	public static void AddContainerItem(InventoryItem item, int index)
 	{
 		ContainerItems.Add(index, item);

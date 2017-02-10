@@ -16,6 +16,9 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 	[SerializeField] private PlayerController _player;
 	[SerializeField] private Vector3 _containerStartingLocation;
     [SerializeField] private Dictionary<int, InventoryItem> _insideContainer;
+
+    private Vector3 _startingPos0 = new Vector3(6.0f, 0.0f, 4.0f);
+    private Vector3 _startingPos1 = new Vector3(-4.0f, 0.0f, -6.0f);
     
     private const int MaxContainerItems = 6;
 	private const float ContainerMaxX = 12.0f;
@@ -39,39 +42,56 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 			_player = transform.parent.GetComponentInChildren<PlayerController>();
 		}
 		
-        if(_insideContainer == null)
-        {
-            _insideContainer = new Dictionary<int, InventoryItem>();
-        }
         _insideContainer = new Dictionary<int, InventoryItem>();
-        GenerateContainerItems();
+        GenerateContainerItems(-1);
         
 		DayNightController.Instance.OnDusk += OnDusk;
 		speed = Random.Range(MaxSpeed, MinSpeed);
+
+		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
+		transform.position = _containerStartingLocation;
 	}
+
+    public void Day0(int index)
+    {
+        if (index == 0) {
+            transform.position = _startingPos0 + new Vector3(Random.Range(-3.0f,3.0f), 0,
+                                                             Random.Range(-3.0f,3.0f));
+            GenerateContainerItems(0);
+        }
+        else {
+            transform.position = _startingPos1 + new Vector3(Random.Range(-3.0f,3.0f), 0,
+                                                             Random.Range(-3.0f,3.0f));
+            GenerateContainerItems(1);
+        }
+
+        speed = MinSpeed * 0.1f;
+    }
 
 	void OnDisable()
 	{
-		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
-		transform.position = _containerStartingLocation;
 		DayNightController.Instance.OnDusk -= OnDusk;
 	}
     
-    public void GenerateContainerItems()
+    public void GenerateContainerItems(int fixedItem)
     {
         _insideContainer = new Dictionary<int, InventoryItem>();
 
         int minItems = 1;
-        if (Clock.Instance.Day == 1) {
+        if (fixedItem == 0) {
             _insideContainer.Add(0, new InventoryItem("Oars"));
-            minItems = 4;
+            minItems = 3;
+        }
+        else if (fixedItem == 1) {
+            _insideContainer.Add(0, new InventoryItem("Compass"));
+            minItems = 3;
         }
 
 		var numberOfItemsInContainer = Random.Range(minItems, MaxContainerItems);
 
         // 1 in 8 crates will have 1 special item in it
         int specialItem = -1;
-        if (Clock.Instance.Day > 1 && Random.Range(0,8) == 0)
+        if (Clock.Instance.Day > 0 && Random.Range(0,4) >= 0)//== 0)
             specialItem = Random.Range(0, numberOfItemsInContainer);
 
         for(int i = _insideContainer.Count; i < numberOfItemsInContainer; i++)
@@ -79,14 +99,14 @@ public class FloatingContainers : MonoBehaviour, IInteractable
             string item;
 
             if (specialItem == i) {
-                int roll = Random.Range(0,5);
+                int roll = Random.Range(0,4);
                 switch (roll) {
                     default:
                     case 0:     item = "Bucket";    break;
                     case 1:     item = "Net";       break;
                     case 2:     item = "Sail";      break;
-                    case 3:     item = "Knife";     break;
-                    case 4:     item = "Pole";      break;
+                    //case 3:     item = "Knife";     break;
+                    case 3:     item = "Pole";      break;
                     //case 2:     item = "Oars";      break;
                 }
             }
@@ -120,7 +140,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
         var vel = new Vector3(0,0,speed);
 
         // Minus the ship's motion
-        vel -= BoatController.Instance.Velocity * 2;
+        vel -= BoatController.Instance.Velocity * 4;
 
         transform.Translate(vel * Time.deltaTime);
 
@@ -133,6 +153,8 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
     public void OnTouchDown(Vector2 point)
     {
+        Inventory.ClearContainer();
+
 		Debug.Log ("You got me");
 		foreach (var item in _insideContainer) {
 			

@@ -14,6 +14,23 @@ public class CompassView : Singleton<CompassView> {
 
     private bool _zoomed = false;
 
+    void OnEnable()
+    {
+        DayNightController.Instance.OnSunset += OnSunset;
+    }
+
+    void OnDisable()
+    {
+        if (DayNightController.Instance != null)
+            DayNightController.Instance.OnSunset -= OnSunset;
+    }
+
+    public void OnSunset(int day)
+    {
+        if (_zoomed)
+            Tap();
+    }
+
     public void UpdateLandmarks(LandmarkController landmarks) {
         float north = landmarks.Rotation;
         _needle.eulerAngles = new Vector3(0.0f, 0.0f, north);
@@ -33,6 +50,7 @@ public class CompassView : Singleton<CompassView> {
 
     public void Tap()
     {
+        UI.Handled = true;
         _zoomed = !_zoomed;
 
         if (_zoomed) {

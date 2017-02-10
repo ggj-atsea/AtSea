@@ -2,7 +2,7 @@
 #pragma warning disable 0649
 
 using UnityEngine;
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -30,6 +30,7 @@ public class PlayerController : Singleton<PlayerController>
         Thirst = 0.0f;
 
         DayNightController.Instance.OnDusk += OnDusk;
+        DayNightController.Instance.OnDusk += OnDusk;
         DayNightController.Instance.OnMidnight += OnMidnight;
         DayNightController.Instance.OnDawn += OnDawn;
         DayNightController.Instance.OnSunrise += OnSunrise;
@@ -39,10 +40,17 @@ public class PlayerController : Singleton<PlayerController>
     void OnDestroy() {
         if (DayNightController.HasInstance) {
             DayNightController.Instance.OnDusk -= OnDusk;
+            DayNightController.Instance.OnDusk -= OnDusk;
             DayNightController.Instance.OnMidnight -= OnMidnight;
             DayNightController.Instance.OnDawn -= OnDawn;
             DayNightController.Instance.OnSunrise -= OnSunrise;
         }
+    }
+
+    private bool Nightfall = false;
+    void OnSunset(int day) {
+        Nightfall = true;
+        BoatController.Instance.Stop();
     }
 
     void OnDusk(int day) {
@@ -72,6 +80,8 @@ public class PlayerController : Singleton<PlayerController>
     }
 
     void OnDawn(int day) {
+        Nightfall = false;
+
         if (GameController.Instance.GameOver) {
             GameController.Instance.ShowEnding();
         }
@@ -111,16 +121,109 @@ public class PlayerController : Singleton<PlayerController>
             UI.Instance.SetSubtitle(sub);
     }
 
-    public void MoveTowards(Vector2 point)
-    {
-        SetState("rowing");
-        if (HasSail)
-        {
-            BoatController.Instance.MoveTowards(point, 1.0f, 0.2f);
+    private bool HasUsedOars = false;
+    public bool NeedsOars {
+        get {
+            if (DayNightController.Instance.IsIntro || DayNightController.Instance.IsOutro)
+                return false;
+
+            return HasUsedOars == false;
         }
-        else
-        {
+    }
+
+    public void Interact(Vector2 point)
+    {
+        if (Nightfall)
+            return;
+
+        if (NeedsOars && HasOar) {
+            UI.Instance.SetSubtitle("Use the oars to move");
+        }
+
+        switch (EquippedItem) {
+            case "Sail":
+            SetState("rowing");
+            BoatController.Instance.MoveTowards(point, 1.0f, 0.2f);
+            break;
+
+            case "Oars":
+            SetState("rowing");
             BoatController.Instance.MoveTowards(point, 0.5f, 0.3f);
+            if (HasUsedOars == false) {
+                HasUsedOars = true;
+                UI.Instance.SetSubtitle("");
+            }
+            break;
+
+            case "Pole":
+            StartCoroutine(Fish());
+            break;
+
+            case "Bucket":
+            StartCoroutine(CheckBucket());
+            break;
+
+            case "Net":
+            StartCoroutine(CheckNet());
+            break;
+
+            //case "Knife":
+            //StartCoroutine(UseKnife());
+            //break;
+        }
+    }
+
+    bool fishing = false;
+
+    IEnumerator Fish() {
+        if (fishing)
+            yield break;
+
+        fishing = true;
+        UI.Instance.SetSubtitle("Fishing...");
+
+        yield return new WaitForSeconds(2.0f);
+
+        if (Random.Range(0,100) < 85) {
+            UI.Instance.SetSubtitle("I didn't catch anything.");
+        }
+        else {
+            UI.Instance.SetSubtitle("Got one!  (+1 food)");
+            Inventory.AddItem(new InventoryItem("Food"));
+        }
+
+        fishing = false;
+    }
+
+    int HasABucket = 0;
+    IEnumerator CheckBucket() {
+        UI.Instance.SetSubtitle("Checking bucket...");
+        yield return new WaitForSeconds(2.0f);
+
+        if (HasABucket > 0) {
+            UI.Instance.SetSubtitle("+" + HasABucket + " water");
+            for (int i = 0; i < HasABucket; ++i)
+                Inventory.AddItem(new InventoryItem("Water"));
+            HasABucket = 0;
+        }
+        else {
+            UI.Instance.SetSubtitle("It's empty...");
+        }
+    }
+
+    int HasANet = 0;
+    IEnumerator CheckNet() {
+        UI.Instance.SetSubtitle("Checking net...");
+        yield return new WaitForSeconds(2.0f);
+
+        if (HasANet > 0) {
+            UI.Instance.SetSubtitle("+" + HasANet + " food");
+            for (int i = 0; i < HasANet; ++i)
+                Inventory.AddItem(new InventoryItem("Water"));
+            HasANet = 0;
+        }
+        else {
+            UI.Instance.SetSubtitle("It's empty...");
         }
     }
 
@@ -141,6 +244,13 @@ public class PlayerController : Singleton<PlayerController>
  
         HUD.Instance.UpdateStats(this);
     }
+
+    public string EquippedItem { get; private set; }
+
+    public void UseItem(string item)
+    {
+        EquippedItem = item;
+    }
     
     void OnItemAdded(string item)
     {
@@ -154,11 +264,11 @@ public class PlayerController : Singleton<PlayerController>
             HasMap = true;
         }
         if (item == "Oars") {
-            UI.Instance.SetSubtitle("Oars...  I can move a bit quicker with these");
+            //UI.Instance.SetSubtitle("Oars...  I can move a bit quicker with these");
             HasOar = true;
         }
         if (item == "Sail") {
-            HasSail = true;
+            //HasSail = true;
         }
     }
 

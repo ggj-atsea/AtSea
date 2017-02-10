@@ -19,9 +19,15 @@ public class UI : Singleton<UI> {
     public InventoryView Inventory { get { return _inventory; } }
     public CompassView Compass { get { return _compass; } }
 
+    public static bool Handled { get; set; }
+
     void Start()
     {
         _splash.SetActive(true);
+    }
+
+    public void Update() {
+        Handled = false;
     }
 
     public void SetSubtitle(string message) {
@@ -39,6 +45,7 @@ public class UI : Singleton<UI> {
     }
 
     public void ShowInventory() {
+        UI.Handled = true;
         _inventory.ShowPlayerInventory();
     }
 

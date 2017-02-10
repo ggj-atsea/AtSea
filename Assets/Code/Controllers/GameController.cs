@@ -34,7 +34,7 @@ public class GameController : Singleton<GameController>
     }
 
     public void Restart() {
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadSceneAsync("Scenes/Intro");
     }
 
     public void ShowEnding() {

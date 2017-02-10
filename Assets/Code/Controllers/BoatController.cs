@@ -52,12 +52,18 @@ public class BoatController : Singleton<BoatController>, IInteractable
     {
     }
 
+    public void Stop()
+    {
+        _velocity = 0;
+        _decay = 0;
+        _motion = new Vector3();
+    }
+
     public void MoveTowards(Vector2 point, float velocity, float decay)
     {
         _velocity = velocity;
         _decay = decay;
         _motion = new Vector3(point.x - Screen.width / 2, 0, point.y - Screen.height / 2).normalized * velocity;
-        Debug.Log("Moving to " + point+ " with velocity " + velocity + " and decay " + decay);
     }
 
     void Update()

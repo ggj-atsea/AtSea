@@ -13,7 +13,8 @@ public class OceanController : Singleton<OceanController>, IInteractable
 
     public void OnTouchDown(Vector2 point)
     {
-        PlayerController.Instance.MoveTowards(point);
+        if (!UI.Handled)
+            PlayerController.Instance.Interact(point);
     }
 
     public void OnTouchUp(Vector2 point)
