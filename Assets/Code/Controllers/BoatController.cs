@@ -84,6 +84,7 @@ public class BoatController : Singleton<BoatController>, IInteractable
             _trail.SetActive(true);
             _trail.transform.localEulerAngles = new Vector3(0,0,angle);
 
+            /*
             var em = _trailSys.emission.rateOverTime;
             em.mode = ParticleSystemCurveMode.Constant;
             em.constantMin = 2.0f * rate;
@@ -92,6 +93,7 @@ public class BoatController : Singleton<BoatController>, IInteractable
             em.mode = ParticleSystemCurveMode.Constant;
             em.constantMin = 8.0f * rate;
             em.constantMax = 8.0f * rate;
+            */
         }
         else {
             _trail.SetActive(false);
