@@ -43,6 +43,21 @@ public class InventoryView : Singleton<InventoryView> {
 
 	}
 
+    void OnEnable()
+    {
+        DayNightController.Instance.OnSunset += OnSunset;
+    }
+
+    void OnDisable()
+    {
+        DayNightController.Instance.OnSunset -= OnSunset;
+    }
+
+    public void OnSunset(int day)
+    {
+        Close();
+    }
+
     private void PopulatePlayerContents() {
         var items = Inventory.Items;
 
