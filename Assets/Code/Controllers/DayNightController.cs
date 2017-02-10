@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
 
@@ -28,6 +29,8 @@ public class DayNightController : Singleton<DayNightController>
 
     [SerializeField] private float _lightningStart;
     [SerializeField] private float _lightningEnd;
+
+    [SerializeField] private bool _isIntro;
 
     public event Action<int> OnDawn;
     public event Action<int> OnSunrise;
@@ -115,8 +118,13 @@ public class DayNightController : Singleton<DayNightController>
             SetLightIntensity(0.0f, 0.0f, 0.0f);
 
             if (_lastTime > time && OnMidnight != null) {
-                AdvanceDay();
-                OnMidnight(day);
+                if (_isIntro) {
+                    SceneManager.LoadSceneAsync("Main");
+                }
+                else {
+                    AdvanceDay();
+                    OnMidnight(day);
+                }
             }
         }
         else if (time < _sunriseEnd) {
