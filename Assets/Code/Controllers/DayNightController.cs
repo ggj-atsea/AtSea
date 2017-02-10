@@ -40,6 +40,7 @@ public class DayNightController : Singleton<DayNightController>
 
     public bool IsRaining { get; set; }
     public bool IsStorm { get; set; }
+    public bool IsIntro { get { return _isIntro; } }
 
     private float _lastTime = -1.0f;
     private float _noiseSeed = 0.0f;

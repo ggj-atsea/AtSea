@@ -102,7 +102,7 @@ public class WaveController : MonoBehaviour
 
 	public void Turbulence()
 	{
-        if (DayNightController.Instance.IsStorm) {
+        if (DayNightController.Instance.IsStorm && !DayNightController.Instance.IsIntro) {
 			_cloth.externalAcceleration = new Vector3(
 				Random.Range(TurbulenceMin, TurbulenceMax), 
 				Random.Range(TurbulenceMin, TurbulenceMax), 
