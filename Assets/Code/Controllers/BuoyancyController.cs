@@ -22,10 +22,10 @@ public class BuoyancyController : MonoBehaviour {
 		float dir = 1f;
 		while(true)
 		{
-			while(rot < 75)
+			while(rot < 60)
 			{
 				float step = Time.deltaTime * _wobbleForce;
-				transform.Rotate(new Vector3(0,0,1) * step * dir);
+				transform.Rotate(new Vector3(1, 0, 1) * step * dir);
 				rot += 1;
 				yield return null;
 			}
