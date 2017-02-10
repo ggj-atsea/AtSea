@@ -32,8 +32,8 @@ public class EquipmentView : Singleton<EquipmentView> {
         for (int i = 0; i < equipment.Count; ++i) {
             var item = equipment[i];
             var card = Instantiate(_card, _items.transform, false);
-//            var image = string.Equals(item.Key.Name, "Food") ? _food : _water;
-//            card.transform.GetChild(0).GetComponent<Image>().sprite = image;
+            var sprite = InventoryView.Instance.GetSprite(item.Name);
+            card.transform.GetChild(0).GetComponent<Image>().sprite = sprite;
             card.GetComponent<Button>().onClick.AddListener(() => Equip(i));
             card.transform.GetChild(2).gameObject.SetActive(false);
         }

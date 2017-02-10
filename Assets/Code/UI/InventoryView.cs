@@ -17,7 +17,7 @@ public class InventoryView : Singleton<InventoryView> {
 
      private Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
 
-     Sprite GetSprite(string name)
+     public Sprite GetSprite(string name)
      {
          var spriteName = name + "Icon";
          Debug.Log("Looking for icon " + spriteName);

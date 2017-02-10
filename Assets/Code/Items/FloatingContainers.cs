@@ -116,7 +116,14 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
 	public void MoveContainer()
 	{
-		transform.Translate(new Vector3(0, 0, speed) * Time.deltaTime);
+        // Our own velocity
+        var vel = new Vector3(0,0,speed);
+
+        // Minus the ship's motion
+        vel -= BoatController.Instance.Velocity * 2;
+
+        transform.Translate(vel * Time.deltaTime);
+
 	}
 
 	public void OnDusk(int day)

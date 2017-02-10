@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -63,8 +64,10 @@ public class LandmarkController : Singleton<LandmarkController> {
 
         UI.Instance.Compass.UpdateLandmarks(this);
 
-        ShowShippingLane(_shippingLane.magnitude < _kShowShippingLane);
-        ShowIsland(_island.magnitude < _kShowIsland);
+        if (_shippingLane.magnitude < _kShowShippingLane)
+            ShowShippingLane();
+        else if (_island.magnitude < _kShowIsland)
+            ShowIsland();
     }
 
     public Vector2 BoatPos() {
@@ -97,18 +100,24 @@ public class LandmarkController : Singleton<LandmarkController> {
         return _island.magnitude;
     }
 
-    private void ShowShippingLane(bool show)
+    private void ShowShippingLane()
     {
+        SceneManager.LoadSceneAsync("Scenes/CargoShip");
+        /*
         Vector2 pos = _shippingLane.normalized * 10;
         _shippingLaneObj.SetActive(show);
         _shippingLaneObj.transform.position = new Vector3(pos.x, 0, pos.y);
+        */
     }
 
-    private void ShowIsland(bool show)
+    private void ShowIsland()
     {
+        SceneManager.LoadSceneAsync("Scenes/Island");
+        /*
         Vector2 pos = _island.normalized * 10;
         _islandObj.SetActive(show);
         _islandObj.transform.position = new Vector3(pos.x, 0, pos.y);
+        */
     }
 
     public bool NearShip() {
