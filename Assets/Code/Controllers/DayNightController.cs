@@ -31,6 +31,7 @@ public class DayNightController : Singleton<DayNightController>
     [SerializeField] private float _lightningEnd;
 
     [SerializeField] private bool _isIntro;
+    [SerializeField] private bool _isOutro;
 
     public event Action<int> OnDawn;
     public event Action<int> OnSunrise;
@@ -41,6 +42,7 @@ public class DayNightController : Singleton<DayNightController>
     public bool IsRaining { get; set; }
     public bool IsStorm { get; set; }
     public bool IsIntro { get { return _isIntro; } }
+    public bool IsOutro { get { return _isOutro; } }
 
     private float _lastTime = -1.0f;
     private float _noiseSeed = 0.0f;
@@ -118,13 +120,17 @@ public class DayNightController : Singleton<DayNightController>
             SetEnvironment(_nightColor, _nightColor, 0.0f);
             SetLightIntensity(0.0f, 0.0f, 0.0f);
 
-            if (_lastTime > time && OnMidnight != null) {
+            if (_lastTime > time) {
                 if (_isIntro) {
-                    SceneManager.LoadSceneAsync("Main");
+                    SceneManager.LoadSceneAsync("Scenes/Main");
+                }
+                else if (_isOutro) {
+                    SceneManager.LoadSceneAsync("Scenes/Intro");
                 }
                 else {
                     AdvanceDay();
-                    OnMidnight(day);
+                    if (OnMidnight != null)
+                        OnMidnight(day);
                 }
             }
         }
