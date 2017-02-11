@@ -45,16 +45,12 @@ public class Inventory : Singleton<Inventory>
 	
 	public static void RemoveItem(InventoryItem item)
 	{
+        if (item.IsEquippable()) {
+            return;
+        }
+
 		switch(item.Name)
 		{
-            // These items don't get consumed
-            case "Compass":
-            case "Map":
-            case "Oar":
-			case "Sail":
-			case "Knife":
-                return;
-
 			case "Food" : PlayerController.Instance.EatFood(); break;
 			case "Water" : PlayerController.Instance.DrinkWater(); break;
 

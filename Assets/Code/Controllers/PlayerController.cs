@@ -119,6 +119,35 @@ public class PlayerController : Singleton<PlayerController>
 
         if (sub != null)
             UI.Instance.SetSubtitle(sub);
+
+        int dice = Random.Range(0,5);
+        if (dice > HasABucket) {
+            ++HasABucket;
+        }
+        
+        dice = Random.Range(0,5);
+        if (dice > HasANet) {
+            ++HasANet;
+        }
+
+        if (day == 0) {
+            StartCoroutine(Tutorial());
+        }
+    }
+
+    IEnumerator Tutorial()
+    {
+        yield return new WaitForSeconds(1.0f);
+        UI.Instance.SetSubtitle("There's an island nearby, and a shipping lane...\n");
+        yield return new WaitForSeconds(1.0f);
+        UI.Instance.SetSubtitle("There's an island nearby, and a shipping lane...\nI'll mark them on my map.");
+        yield return new WaitForSeconds(1.0f);
+        UI.Instance.Compass.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        UI.Instance.SetSubtitle("");
+        yield return new WaitForSeconds(2.0f);
+        UI.Instance.SetSubtitle("But I need supplies first...\nMy oars were in that crate.");
+        yield return new WaitForSeconds(2.0f);
     }
 
     private bool HasUsedOars = false;
@@ -131,13 +160,32 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
+    public string EquippedItem { get; private set; }
+
+    public void UseItem(string item)
+    {
+        switch (EquippedItem) {
+        case "Oars":
+            SetState("rowing");
+            if (!HasUsedOars) {
+                UI.Instance.SetSubtitle("Tap to row");
+            }
+            break;
+
+        case "Pole":
+            SetState("fishing");
+            break;
+        }
+        EquippedItem = item;
+    }
+    
     public void Interact(Vector2 point)
     {
         if (Nightfall)
             return;
 
-        if (NeedsOars && HasOar) {
-            UI.Instance.SetSubtitle("Use the oars to move");
+        if (NeedsOars && HasOar && EquippedItem != "Oars") {
+            UI.Instance.SetSubtitle("Tap the oars to equip");
         }
 
         switch (EquippedItem) {
@@ -197,6 +245,11 @@ public class PlayerController : Singleton<PlayerController>
 
     int HasABucket = 0;
     IEnumerator CheckBucket() {
+        if (fishing)
+            yield break;
+
+        fishing = true;
+
         UI.Instance.SetSubtitle("Checking bucket...");
         yield return new WaitForSeconds(2.0f);
 
@@ -209,6 +262,11 @@ public class PlayerController : Singleton<PlayerController>
         else {
             UI.Instance.SetSubtitle("It's empty...");
         }
+
+        fishing = false;
+
+        yield return new WaitForSeconds(1.0f);
+        UI.Instance.SetSubtitle("");
     }
 
     int HasANet = 0;
@@ -216,8 +274,13 @@ public class PlayerController : Singleton<PlayerController>
         UI.Instance.SetSubtitle("Checking net...");
         yield return new WaitForSeconds(2.0f);
 
-        if (HasANet > 0) {
-            UI.Instance.SetSubtitle("+" + HasANet + " food");
+        if (Random.Range(0,5) == 0) {
+            UI.Instance.SetSubtitle("found a water bottle (+1 water)");
+            Inventory.AddItem(new InventoryItem("Water"));
+            HasANet = 0;
+        }
+        else if (HasANet > 0) {
+            UI.Instance.SetSubtitle("found some fish (+" + HasANet + " food)");
             for (int i = 0; i < HasANet; ++i)
                 Inventory.AddItem(new InventoryItem("Water"));
             HasANet = 0;
@@ -225,6 +288,11 @@ public class PlayerController : Singleton<PlayerController>
         else {
             UI.Instance.SetSubtitle("It's empty...");
         }
+
+        fishing = false;
+
+        yield return new WaitForSeconds(1.0f);
+        UI.Instance.SetSubtitle("");
     }
 
     public void EatFood()
@@ -245,13 +313,6 @@ public class PlayerController : Singleton<PlayerController>
         HUD.Instance.UpdateStats(this);
     }
 
-    public string EquippedItem { get; private set; }
-
-    public void UseItem(string item)
-    {
-        EquippedItem = item;
-    }
-    
     void OnItemAdded(string item)
     {
         /*

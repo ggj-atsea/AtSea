@@ -21,7 +21,7 @@ public class RandomDebrisController : MonoBehaviour {
 		foreach(var container in floatingContainers)
 		{	
 			var random = Random.Range (0, 6);
-			if (random >= 3) {
+			if (random <= 1) {
 				container.transform.parent = _sea;
 				container.gameObject.SetActive (true);
 			}

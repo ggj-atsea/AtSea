@@ -17,14 +17,16 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 	[SerializeField] private Vector3 _containerStartingLocation;
     [SerializeField] private Dictionary<int, InventoryItem> _insideContainer;
 
-    private Vector3 _startingPos0 = new Vector3(6.0f, 0.0f, 4.0f);
-    private Vector3 _startingPos1 = new Vector3(-4.0f, 0.0f, -6.0f);
+    private Vector3 _startingPos0 = new Vector3(5.0f, 0.0f, 4.0f);
+    private Vector3 _startingPos1 = new Vector3(-4.0f, 0.0f, -5.0f);
     
     private const int MaxContainerItems = 6;
 	private const float ContainerMaxX = 12.0f;
 	private const float ContainerMinX = -12.0f;
 	private const float ContainerMinZ = 10.0f;
 	private const float ContainerMaxZ = 18.0f;
+	private const float ContainerMinZNeg = -6.0f;
+	private const float ContainerMaxZNeg = -12.0f;
 	private const float ContainerResetPoint = -5.0f;
 	private const float MinSpeed = -0.5f;
 	private const float MaxSpeed = -3f;
@@ -48,8 +50,15 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		DayNightController.Instance.OnDusk += OnDusk;
 		speed = Random.Range(MaxSpeed, MinSpeed);
 
-		_containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
-		transform.position = _containerStartingLocation;
+        if (Random.Range(0,2) == 0) {
+            _containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZ, ContainerMaxZ));
+            transform.position = _containerStartingLocation;
+        }
+        else {
+            speed = -speed;
+            _containerStartingLocation = new Vector3(Random.Range(ContainerMinX, ContainerMaxX), 0, Random.Range(ContainerMinZNeg, ContainerMaxZNeg));
+            transform.position = _containerStartingLocation;
+        }
 	}
 
     public void Day0(int index)
@@ -91,7 +100,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 
         // 1 in 8 crates will have 1 special item in it
         int specialItem = -1;
-        if (Clock.Instance.Day > 0 && Random.Range(0,4) >= 0)//== 0)
+        if (Clock.Instance.Day > 0 && Random.Range(0,4) == 0)
             specialItem = Random.Range(0, numberOfItemsInContainer);
 
         for(int i = _insideContainer.Count; i < numberOfItemsInContainer; i++)
