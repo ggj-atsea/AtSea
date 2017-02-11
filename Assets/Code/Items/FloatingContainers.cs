@@ -174,7 +174,7 @@ public class FloatingContainers : MonoBehaviour, IInteractable
 		InventoryView.Instance.PopulatePackageContents();
 		InventoryView.Instance.ShowPackageInventory();
 
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public void OnTouchExit(Vector2 point)
